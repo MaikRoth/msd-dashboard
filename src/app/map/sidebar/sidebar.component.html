@@ -1,0 +1,25 @@
+<div *ngIf="!fetching">
+  <div class="btn-group mt-5 center-div" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" class="btn-check" [(ngModel)]="info" value="No Highlight" name="btnradio" id="NoHighlight" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="NoHighlight">No Highlight</label>
+  
+    <input type="radio" class="btn-check" [(ngModel)]="info" value="Health" name="btnradio" id="Health" autocomplete="off">
+    <label class="btn btn-outline-primary" for="Health">Health</label>
+  
+    <input type="radio" class="btn-check" [(ngModel)]="info" value="Energy" name="btnradio" id="Energy" autocomplete="off">
+    <label class="btn btn-outline-primary" for="Energy">Energy</label>
+
+    <input type="radio" class="btn-check" [(ngModel)]="info" value="Cargo" name="btnradio" id="Cargo" autocomplete="off">
+    <label class="btn btn-outline-primary" for="Cargo">Cargo</label>
+  </div>
+
+  <div >
+    <div class="container">
+      <div class="row">
+        <div class="col" *ngFor="let player of players" style="width: fit-content;">
+          <app-player [player]="player" [tag]="info"></app-player>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

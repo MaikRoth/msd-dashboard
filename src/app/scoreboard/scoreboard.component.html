@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>Scoreboard:</h2>
+        </div>
+        <div class="col-md-8 mb-3 mt-3" *ngIf="scoreboard">
+            <app-game [game]="game" *ngIf="game"></app-game>
+        </div>
+    </div>
+    <div class="row" *ngIf="scoreboard">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item list-group-item-primary"><strong>Name</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Fighting Points</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Mining Points</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Trading Points</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Travel Points</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Total Points</strong></li>
+        </ul>
+        <ul class="list-group list-group-horizontal" *ngFor="let entrie of scoreboard.scoreboardEntriesWithAchievements; let i = index">
+            <li class="list-group-item">{{entrie.player.name}}</li>
+            <li class="list-group-item">{{entrie.fightingScore}}</li>
+            <li class="list-group-item">{{entrie.miningScore}}</li>
+            <li class="list-group-item">{{entrie.tradingScore}}</li>
+            <li class="list-group-item">{{entrie.travelingScore}}</li>
+            <li class="list-group-item">{{entrie.totalScore}}</li>
+        </ul>
+    </div>
+    
+    <div class="row" *ngIf="scoreboard">
+        <strong style="font-size: larger;"><u>Achivements:</u></strong>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item list-group-item-primary"><strong>Name</strong></li>
+            <li class="list-group-item list-group-item-primary"><strong>Achievements</strong></li>
+        </ul>
+        <ul class="list-group list-group-horizontal" *ngFor="let entrie of scoreboard.scoreboardEntriesWithAchievements; let i = index">
+            <li class="list-group-item">{{entrie.player.name}}</li>
+            <div class="container">
+                <div class="row">
+                    <div class="col" *ngFor="let achievemnt of entrie.achievements">
+                        <strong><u>{{achievemnt.achievement.name}}</u></strong>
+                        <img [src]="achievemnt.achievement.image" style="width: 100px;" alt="achievement_image">
+
+                    </div>
+                </div>
+            </div>
+        </ul>
+    </div>
+
+</div>

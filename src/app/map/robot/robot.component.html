@@ -1,0 +1,275 @@
+<div class="accordion" style="margin-top: 3px">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button
+        class="accordion-button"
+        [ngStyle]="{ 'background-color': getColor(), 'color': getAdjustedColor() }"
+
+        type="button"
+        (click)="toggleCollapse()"
+        [attr.aria-expanded]="!isCollapsed"
+      >
+        {{ robot.name }} 
+        <img [src]="robot.img" style="width:50px;">
+        <img
+          *ngIf="infoToShow === 'Cargo'"
+          style="margin-left: 15px;"
+          [src]="getMaterialImage(getMostMaterial(robot.cargo))"
+          alt=""
+        />
+      </button>
+    </h2>
+    <div [ngClass]="{ 'accordion-collapse': true, collapse: isCollapsed }">
+      <div class="accordion-body">
+        <div>
+          <button class="btn btn-primary" (click)="toggleHighlighting()">
+            {{
+              robot.highlighted ? "Dont Highlight Robot" : "Highlight Robot"
+            }}</button
+          ><br />
+          <strong><u>IDs:</u></strong>
+          <div class="button-row" style="margin-top: 3px; margin-bottom: 3px">
+            <div class="text-button" (click)="copyToClipboard(robot.planetId)">
+              <img src="../../../assets/images/icons/planet.png" alt="planet" />
+            </div>
+            <div class="text-button" (click)="copyToClipboard(robot.playerId)">
+              <img src="../../../assets/images/icons/player.png" alt="player" />
+            </div>
+            <div class="text-button" (click)="copyToClipboard(robot.robotId)">
+              <img src="../../../assets/images/icons/robot.png" alt="robot" />
+            </div>
+          </div>
+        </div>
+        <u> <strong>Vitals:</strong></u>
+        <br />
+        <div class="progress-container">
+          <img
+            src="../../../assets/images/icons/health.png"
+            alt=""
+            class="vital-icon"
+          />
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              [style.width]="robot.vitals.health * 10 + '%'"
+              [style.background-color]="getColorForHealth(robot.vitals.health)"
+              aria-valuemin="0"
+              aria-valuemax="10"
+            >
+              {{ robot.vitals.health }}
+            </div>
+          </div>
+        </div>
+        <div class="progress-container">
+          <img 
+          src="../../../assets/images/icons/energy.png" 
+          alt="" 
+          class="vital-icon"/>
+          <div class="progress" style="margin-bottom: 4px">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              [style.width]="(robot.vitals.energy / 20) * 100 + '%'"
+              [style.background-color]="getColorForEnergy(robot.vitals.energy)"
+              aria-valuemin="0"
+              aria-valuemax="20"
+            >
+              {{ robot.vitals.energy }}
+            </div>
+          </div>
+        </div>
+        <u><strong>Cargo:</strong></u>
+        <br />
+        <div class="cargo-display">
+          <div class="cargo-container">
+            <div class="cargo-item" *ngIf="robot.cargo.coal > 0">
+              <img [src]="getMaterialImage('coal')" alt="Coal" />
+              <span>{{ robot.cargo.coal }}</span>
+            </div>
+            <div class="cargo-item" *ngIf="robot.cargo.iron > 0">
+              <img [src]="getMaterialImage('iron')" alt="Iron" />
+              <span>{{ robot.cargo.iron }}</span>
+            </div>
+            <div class="cargo-item" *ngIf="robot.cargo.gem > 0">
+              <img [src]="getMaterialImage('gem')" alt="Gem" />
+              <span>{{ robot.cargo.gem }}</span>
+            </div>
+            <div class="cargo-item" *ngIf="robot.cargo.gold > 0">
+              <img [src]="getMaterialImage('gold')" alt="Gold" />
+              <span>{{ robot.cargo.gold }}</span>
+            </div>
+            <div class="cargo-item" *ngIf="robot.cargo.platin > 0">
+              <img [src]="getMaterialImage('platin')" alt="Platin" />
+              <span>{{ robot.cargo.platin }}</span>
+            </div>
+            <div class="cargo-item" *ngIf="robot.cargo.used === 0">
+              <span>{{ robot.cargo.used }}</span>
+            </div>
+          </div>
+          <div class="cargo-capacity">
+            <span class="slash">/</span>
+            <span>{{ robot.cargo.capacity }} Capacity</span>
+          </div>
+        </div>
+        <u><strong>Levels:</strong></u>
+        <br>
+        <div *ngIf="isLeveled(robot.levels); else notLeveled">
+          <div *ngIf="robot.levels.damage > 0">
+            Damage:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.damage / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.damage"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.damage }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.energy > 0">
+            Energy:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.energy / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.energy"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.energy }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.energyRegeneration > 0">
+            Energy Regeneration:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="
+                  (robot.levels.energyRegeneration / 5) * 100 + '%'
+                "
+                [attr.aria-valuenow]="robot.levels.energyRegeneration"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.energyRegeneration }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.health > 0">
+            Health:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.health / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.health"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.health }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.miningLevel > 0">
+            Mining Level:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.miningLevel / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.miningLevel"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.miningLevel }}
+              </div>
+            </div>
+            <div *ngIf="robot.levels.miningSpeed > 0">
+              Mining Speed:
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [style.width]="(robot.levels.miningSpeed / 5) * 100 + '%'"
+                  [attr.aria-valuenow]="robot.levels.miningSpeed"
+                  aria-valuemin="0"
+                  aria-valuemax="5"
+                >
+                  {{ robot.levels.miningSpeed }}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="robot.levels.storage > 0">
+              Storage:
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [style.width]="(robot.levels.storage / 5) * 100 + '%'"
+                  [attr.aria-valuenow]="robot.levels.storage"
+                  aria-valuemin="0"
+                  aria-valuemax="5"
+                >
+                  {{ robot.levels.storage }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.miningLevel > 0">
+            Mining Level:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.miningLevel / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.miningLevel"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.miningLevel }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.miningSpeed > 0">
+            Mining Speed:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.miningSpeed / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.miningSpeed"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.miningSpeed }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="robot.levels.storage > 0">
+            Storage:
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width]="(robot.levels.storage / 5) * 100 + '%'"
+                [attr.aria-valuenow]="robot.levels.storage"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
+                {{ robot.levels.storage }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #notLeveled><i>Not leveled yet</i></ng-template>
+      </div>
+    </div>
+  </div>
+</div>

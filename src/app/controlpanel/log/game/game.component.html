@@ -1,0 +1,32 @@
+<ul class="list-group" *ngIf="game">
+    <li class="list-group-item" style="padding: 2px 0px 0px 10px;">GameId: {{game.gameId}}</li>
+    <li class="list-group-item" style="padding: 2px 0px 0px 2px;">
+        <div class="container">
+            <div class="row">
+                <div class="col">Status: <strong>{{game.gameStatus}}</strong></div>
+                <div class="col">maxPlayer: {{game.maxPlayers}}</div>
+                <div class="col">maxRounds: {{game.maxRounds}}</div>
+                <div class="col">Current Round: {{game.currentRoundNumber}}</div>
+                <div class="col">RoundTime (ms): {{game.roundLengthInMillis}}</div>
+                <div class="col">Players:
+                    <ul>
+                        <li *ngFor="let player of game.participatingPlayers"> {{player}}</li>
+                        <p *ngIf="game.participatingPlayers.length == 0" style="color: red;">No Players</p>
+                    </ul>
+                </div>
+                <div class="col" *ngIf="planets">
+                    Planets: {{planets.length}}
+                </div>
+                <div class="col" *ngIf="robots">
+                    Robots: {{robots.length}}
+                </div>
+                <div class="col" style="padding-left: 0;">
+                    <div><button class="btn btn-success game-btn mt-2 ml-3" (click)="onStartGame(game.gameId)" style="width: 120px;" *ngIf="game.gameStatus==='created'">Start
+                            Game</button></div>
+                    <div><button class="btn btn-danger game-btn mb-2 mt-2 ml-3" style="width: 120px;" (click)="onEndGame(game.gameId)"
+                            [disabled]="game.gameStatus==='created'">End Game</button></div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>

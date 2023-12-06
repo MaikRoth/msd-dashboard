@@ -1,0 +1,18 @@
+<div class="container planet" (click)="copyToClipboard(planet.planetId)">
+    <div class="row">
+        <div class="col-6">
+            <img [src]="planet.resourceType" alt="" class="planet-image" *ngIf="planet.resource.capacity>0">
+        </div>
+        <div class="col-6 planetInfo" [ngClass]="{'always-show': showInfo}" *ngIf="planet.resource.amount > 0">
+            {{formatNumber(planet.resource.amount)}}
+        </div>
+    </div>
+    <div class="copied-message" [class]="copiedClass">Copied!</div>
+    <div class="row">
+        <div class="col-12" *ngIf="planet.robots.length>0">
+            <div class="robots-container">
+                <img *ngFor="let robot of planet.robots" [src]="robot.img" alt="" class="robot-image">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="container">
+    <br>
+    <h4>Create Games</h4>
+    <div class="row">
+        <div class="col">
+            <button *ngFor="let game of customGames" class="btn btn-primary"
+                style="text-align: left; margin-right: 5px; margin-top: 5px;" (click)="onSelectCustomGame()">
+                Player: {{game.players}} <br>
+                Rounds: {{game.rounds}} <br>
+                Rt: {{game.duration/1000}}s </button>
+        </div>
+        <div class="col">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        MaxPlayers:
+                        <input type="number" aria-label="maxPlayers" class="form-control" [(ngModel)]="players">
+                    </div>
+                    <div class="col">
+                        MaxRounds:
+                        <input type="number" aria-label="Rounds" class="form-control" [(ngModel)]="rounds">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        RoundTime:
+                        <input type="number" aria-label="roundtime" class="form-control" [(ngModel)]="duration">
+                    </div>
+                    <div class="col">
+                        <br>
+                        <button class="btn btn-primary" (click)="onCreateCustomGame()" [class.shake]="shouldShake">Create Custom</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col alert alert-danger" role="alert" *ngIf="gameCreationErrorText">
+            <h4>Error {{status}}</h4>
+            <p>{{gameCreationErrorText}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-2">
+            <h4>Current Games</h4>
+        </div>
+        <app-log style="margin-top: 1%;"></app-log>
+    </div>
+</div>

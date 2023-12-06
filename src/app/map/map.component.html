@@ -1,0 +1,43 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
+        </div>
+        <div class="col-md-8">
+            <div class="text-center" *ngIf="fetching">
+                <div class="spinner-grow spinner-border m-5" style="width: 9rem; height: 9rem;position: relative; top: 300px;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="container" *ngIf="!fetching">
+                <div class="row">
+                    <div class="col-md-11"
+                        style="padding-left: 0; margin-left: 13px; margin-top: 5px; margin-bottom: 5px;">
+                        <app-game [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
+                    </div>
+                </div>
+                <button class="btn btn-info" (click)="showPlanetInfo=!showPlanetInfo" style="margin-bottom: 3px;" >Planet Resource Amounts</button>
+                <!-- <button class="btn btn-primary" style="margin-bottom: 3px;" disabled>Color Highlight Planets</button>
+                <button class="btn btn-primary" style="margin-bottom: 3px;" disabled>Robot/Player/Planet Distribution</button> -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="map-container">
+                            <div class="map-row" *ngFor="let row of grid">
+                                <div class="map-cell" *ngFor="let planet of row">
+                                    <app-planet *ngIf="planet;else noPlanet" [planet]="planet" [showInfo]="showPlanetInfo" [robots]="planet.robots" [class.highlighted]="hasHighlightedRobot(planet)"></app-planet>
+                                    <ng-template #noPlanet>
+                                        <div class="noPlanet"></div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <app-settingsbar></app-settingsbar>
+        </div>
+    </div>
+</div>

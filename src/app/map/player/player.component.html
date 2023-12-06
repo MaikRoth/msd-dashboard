@@ -1,0 +1,41 @@
+<ul class="list-group mt-3">
+  <li class="list-group-item list-group-item-primary">{{ player.name }}</li>
+  <li class="list-group-item">Money: {{ player.money }}</li>
+  <li class="list-group-item">
+    <div class="container" *ngIf="player.robots.length > 0">
+        Robots:
+      <div class="row">
+        <div class="col">
+          <button
+            class="btn btn-primary"
+            (click)="toggleHighlightRobots()"
+          >
+          <span [innerHTML]="highlightRobots ? '<strong>Highlight</strong>' : 'Highlight'"></span>
+          </button>
+        </div>
+        <div class="col">
+          <button
+            class="btn btn-success"
+            (click)="showRobots = !showRobots"
+          >
+            Inspect ({{
+              player.robots.length
+            }})
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="showRobots"
+      style="margin-top: 3px; max-height: 700px; overflow: auto;"
+    >
+      <app-robot
+        *ngFor="let robo of player.robots"
+        [robot]="robo"
+        [infoToShow]="tag"
+      ></app-robot>
+    </div>
+    <div *ngIf="player.robots.length < 1" style="color: red">No Robots</div>
+  </li>
+</ul>
