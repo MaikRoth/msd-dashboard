@@ -35,21 +35,21 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   constructor(private gameLogService: GamelogService, private gamesService: GamesService) { }
 
   ngOnInit() {
-    this.scoreboardSubscription = interval(5000).subscribe(() => {
+    this.scoreboardSubscription = interval(1000).subscribe(() => {
       this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievemnts) => {
         this.scoreboard = res;
         this.scoreboard.scoreboardEntriesWithAchievements = this.scoreboard.scoreboardEntriesWithAchievements.sort((a, b) => {
-          if (a.totalScore > b.totalScore) {
+          if (a.totalScore < b.totalScore) {
             return 1;
           }
-          if (a.totalScore < b.totalScore) {
+          if (a.totalScore > b.totalScore) {
             return -1
           }
           return 0
         })
       })
     })
-    this.gameSubscription = interval(5000).subscribe(() => {
+    this.gameSubscription = interval(1000).subscribe(() => {
       this.gamesService.getRecentGame()
         .subscribe((res: Game[]) => {
           if (res.length > 0) {

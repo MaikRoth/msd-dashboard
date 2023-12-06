@@ -8,6 +8,7 @@ import { PlayerService } from '../player.service';
 import { Player } from './player/player.component';
 import { Robot } from './robot/robot.component';
 import { Planet } from './planet/planet.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -34,7 +35,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private robotService: RobotsService,
     private gamesService: GamesService,
-    private playerService: PlayerService) { }
+    private playerService: PlayerService,
+    private router : Router) { }
 
   ngOnInit() {
     this.planetSubscription = interval(this.intervalTime).subscribe(() => this.onGetPlanets());
@@ -42,6 +44,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.onGetPlayers();
     this.playerService.getPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
+    setTimeout(() => {
+      this.fetching = false;
+    }, 3000);
   }
   private getPosition(planet: Planet): { x: number; y: number } {
     return planet.position || { x: 0, y: 0 };
@@ -63,6 +68,11 @@ export class MapComponent implements OnInit, OnDestroy {
     this.gamesService.fetchGames().subscribe((games: Game[]) => {
       this.games = games
       this.intervalTime = this.games[0].roundLengthInMillis
+      if (this.games.length === 0){
+        this.players = [];
+        this.robots = [];
+        this.planets = [];
+      }
       this.fetching = false;
     })
   }
@@ -71,7 +81,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this.players = players;
     });
   }
-
+  redirectToControlpanel() {
+    this.router.navigate(['/controlpanel']);
+  }
   calculateEarningsFromCargoChange(oldCargo, newCargo) {
     let earnings = 0;
     const prices = { coal: 5, iron: 15, gem: 30, gold: 50, platin: 60 };

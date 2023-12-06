@@ -3,7 +3,7 @@
     <h4>Create Games</h4>
     <div class="row">
         <div class="col">
-            <button *ngFor="let game of customGames" class="btn btn-primary"
+            <button *ngFor="let game of customGames$ | async" class="btn btn-primary"
                 style="text-align: left; margin-right: 5px; margin-top: 5px;" (click)="onSelectCustomGame()">
                 Player: {{game.players}} <br>
                 Rounds: {{game.rounds}} <br>

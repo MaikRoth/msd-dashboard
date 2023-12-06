@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
 import { ControlpanelComponent } from './controlpanel/controlpanel.component';
 import { HeaderComponent } from './header/header.component';
@@ -17,8 +16,9 @@ import { PlayerComponent } from './map/player/player.component';
 import { RobotComponent } from './map/robot/robot.component';
 import { SettingsbarComponent } from './map/settingsbar/settingsbar.component';
 import { StoreModule } from '@ngrx/store';
-import { gameReducer } from './controlpanel/game.reducer';
 import { HomeComponent } from './home/home.component';
+import { customGamesReducer, planetsReducer, playersReducer, robotsReducer } from './store/dashboard.reducer';
+import { EffectsModule } from '@ngrx/effects';
 
 
 
@@ -43,7 +43,13 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({ game: gameReducer })
+    StoreModule.forRoot(
+      { customGames: customGamesReducer,
+        robots: robotsReducer,
+        planets: planetsReducer,
+        players: playersReducer 
+      }),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent]

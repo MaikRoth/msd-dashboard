@@ -1,43 +1,55 @@
-
+<div class="text-center" *ngIf="fetching">
+  <div
+    class="spinner-grow spinner-border m-5"
+    style="width: 9rem; height: 9rem; position: relative; top: 300px"
+    role="status"
+  >
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="center-container" *ngIf="!fetching && games.length < 1">
+    <div class="text-center">
+        <h4>There is probably no game running at the moment.</h4>
+        <img src="../../assets/images/robots/shrug-robot.png" alt="" style="width: 500px; margin-bottom: 10px;"><br>
+        <button class="btn btn-success" (click)="redirectToControlpanel()">
+          Create a Game
+        </button>
+    </div>
+</div>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2">
-            <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
+  <div class="row">
+    <div class="container">
+      <div class="row justify-content-center text-center">
+        <div class="col-md-2" *ngIf="players.length > 0">
+          <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
         </div>
         <div class="col-md-8">
-            <div class="text-center" *ngIf="fetching">
-                <div class="spinner-grow spinner-border m-5" style="width: 9rem; height: 9rem;position: relative; top: 300px;" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
+            <app-game
+              [game]="games[0]"
+              [planets]="planets"
+              [robots]="robots"
+            ></app-game> 
+          <div class="map-container" *ngIf="games.length > 0">
+            <div class="map-row" *ngFor="let row of grid">
+              <div class="map-cell" *ngFor="let planet of row">
+                <app-planet
+                  *ngIf="planet; else noPlanet"
+                  [planet]="planet"
+                  [showInfo]="showPlanetInfo"
+                  [robots]="planet.robots"
+                  [class.highlighted]="hasHighlightedRobot(planet)"
+                ></app-planet>
+                <ng-template #noPlanet>
+                  <div class="noPlanet"></div>
+                </ng-template>
+              </div>
             </div>
-            <div class="container" *ngIf="!fetching">
-                <div class="row">
-                    <div class="col-md-11"
-                        style="padding-left: 0; margin-left: 13px; margin-top: 5px; margin-bottom: 5px;">
-                        <app-game [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
-                    </div>
-                </div>
-                <button class="btn btn-info" (click)="showPlanetInfo=!showPlanetInfo" style="margin-bottom: 3px;" >Planet Resource Amounts</button>
-                <!-- <button class="btn btn-primary" style="margin-bottom: 3px;" disabled>Color Highlight Planets</button>
-                <button class="btn btn-primary" style="margin-bottom: 3px;" disabled>Robot/Player/Planet Distribution</button> -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="map-container">
-                            <div class="map-row" *ngFor="let row of grid">
-                                <div class="map-cell" *ngFor="let planet of row">
-                                    <app-planet *ngIf="planet;else noPlanet" [planet]="planet" [showInfo]="showPlanetInfo" [robots]="planet.robots" [class.highlighted]="hasHighlightedRobot(planet)"></app-planet>
-                                    <ng-template #noPlanet>
-                                        <div class="noPlanet"></div>
-                                    </ng-template>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-        <div class="col-md-2">
-            <app-settingsbar></app-settingsbar>
+        <div class="col-md-2" *ngIf="games.length > 0">
+          <app-settingsbar></app-settingsbar>
         </div>
+      </div>
     </div>
+  </div>
 </div>
