@@ -3,13 +3,13 @@ import { MapService } from '../map.service';
 import { Subscription, interval } from 'rxjs';
 import { RobotsService } from '../robot.service';
 import { GamesService } from '../games.service';
-import { Game } from '../controlpanel/log/log.component';
 import { PlayerService } from '../player.service';
 import { Player } from './player/player.component';
 import { Robot } from './robot/robot.component';
 import { Planet } from './planet/planet.component';
 import { Router } from '@angular/router';
 import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../app.component';
+import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 
 @Component({
   selector: 'app-map',

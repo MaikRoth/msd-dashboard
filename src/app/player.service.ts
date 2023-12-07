@@ -1,11 +1,8 @@
 import { Injectable } from "@angular/core";
 import { GamesService } from "./games.service";
 import { HttpClient } from "@angular/common/http";
-import { Game } from "./controlpanel/log/log.component";
 import { Player } from './map/player/player.component';
-import { RobotsService } from "./robot.service";
-import { Robot } from "./map/robot/robot.component";
-import { Observable, switchMap, of, catchError, Subject } from "rxjs";
+import { switchMap, of, catchError, Subject } from "rxjs";
 
 type Entrie = {
     player: {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Game } from './controlpanel/log/log.component';
 import { CustomGame } from './controlpanel/controlpanel.component';
 import { Store } from '@ngrx/store';
 import { init } from './store/dashboard.actions';
+import { Game } from './controlpanel/gameshandler/gameshandler.component';
 
 @Component({
   selector: 'app-root',

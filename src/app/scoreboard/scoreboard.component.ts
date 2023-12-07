@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GamelogService } from './gamelog.service';
-import { Subscription, catchError, interval, of } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { GamesService } from '../games.service';
-import { Game } from '../controlpanel/log/log.component';
+import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 
 type ScoreboardWithAchievemnts = {
   gameId: string,
