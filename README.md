@@ -57,4 +57,4 @@ After completing the installation, you can access the Dashboard by navigating to
 
 ## Troubleshooting
 
-If you encounter any issues during the setup, make sure all prerequisites are correctly installed and that you're following the steps in the correct order. For more specific problems, consult the documentation or reach out to the support team.
+If you encounter any issues during the setup, make sure all prerequisites are correctly installed and that you're following the steps in the correct order.
