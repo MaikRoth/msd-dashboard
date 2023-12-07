@@ -12,7 +12,7 @@ Before you begin, ensure that you have the following installed on your system:
 - [This Backend for Planets and Robots](https://gitlab.com/debuas1999/rs-microservice-dungeon-map-api-backend)
 - [Gamelog](https://gitlab.com/the-microservice-dungeon/core-services/gamelog)
 
-**Important:** It is crucial to have both the local development environment, the backend and the gamelog up and running for the Dashboard to function correctly. Please follow the steps provided in their respective links to set up these components before proceeding.
+**Important:** It is crucial to have the local development environment, the backend and the gamelog up and running for the Dashboard to function correctly. Please follow the steps provided in their respective links to set up these components before proceeding.
 
 ## Installation Steps
 
