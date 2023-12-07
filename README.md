@@ -9,7 +9,7 @@ Before you begin, ensure that you have the following installed on your system:
 - [Node.js](https://nodejs.org/en/download/)
 - [Angular CLI](https://angular.io/cli)
 - [A Running Local Development Environment](https://gitlab.com/the-microservice-dungeon/devops-team/local-dev-environment)
-- [This Backend For Planets and Robots](https://gitlab.com/debuas1999/rs-microservice-dungeon-map-api-backend)
+- [This Backend for Planets and Robots](https://gitlab.com/debuas1999/rs-microservice-dungeon-map-api-backend)
 
 **Important:** It is crucial to have both the local development environment and the backend up and running for the Dashboard to function correctly. Please follow the steps provided in their respective links to set up these components before proceeding.
 
