@@ -1,11 +1,15 @@
 import { addCustomGame } from './dashboard.actions';
 import { createReducer, on } from '@ngrx/store';
 
-const initialCustomGamesState = [{ players: 6, rounds: 50, duration: 15000 }]
+const initialCustomGamesState = { 
+  customGames: [{players: 6, rounds: 50, duration: 15000}]
+}
 export const customGamesReducer = createReducer(
   initialCustomGamesState,
-  on(addCustomGame, (state, { players, rounds, duration }) => ([...state, { players, rounds, duration }]))
-)
+  on(addCustomGame, (state, { players, rounds, duration }) => 
+  ({...state, customGames:[...state.customGames,{ players, rounds, duration }]})
+));
+
 const initialRobotsState = []
 export const robotsReducer = createReducer(
   initialRobotsState,

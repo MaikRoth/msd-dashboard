@@ -26,7 +26,7 @@ export class RobotsService {
                     if (existingRobot) {
                         newRobotsArray.push({ ...existingRobot, ...newRobot });
                     } else {
-                        const robotName = this.generateRobotName();
+                        const robotName = this.generateRobotName();                        
                         newRobotsArray.push({
                             ...newRobot,
                             name: robotName,

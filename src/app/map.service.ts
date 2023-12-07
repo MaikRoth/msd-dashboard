@@ -17,14 +17,12 @@ export class MapService {
     constructor(private http: HttpClient) { }
 
     private planets: Planet[] = [];
-    private planetsSubject = new Subject<Planet[]>();
 
 
     fetchPlanets() {
         return this.http.get(this.planetsEndpoint).subscribe({
             next: (res: Planet[]) => {
                 this.planets = res.map(planetData => this.mapToPlanet(planetData));
-                // this.planetsSubject.next(res.map(planetData => this.mapToPlanet(planetData)))
             },
             error: (error) => {
                 console.error('Error fetching planets:', error);

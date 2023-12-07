@@ -11,7 +11,8 @@
     <div class="row">
         <div class="col-12" *ngIf="planet.robots.length>0">
             <div class="robots-container">
-                <img *ngFor="let robot of planet.robots" [src]="robot.img" alt="" class="robot-image">
+                <div class="spinner" *ngIf="imageLoading"></div>
+                <img *ngFor="let robot of planet.robots" [src]="robot.img" alt="" class="robot-image" (load)="imageLoading = false">
             </div>
         </div>
     </div>

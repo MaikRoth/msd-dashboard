@@ -9,6 +9,7 @@ import { Player } from './player/player.component';
 import { Robot } from './robot/robot.component';
 import { Planet } from './planet/planet.component';
 import { Router } from '@angular/router';
+import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../app.component';
 
 @Component({
   selector: 'app-map',
@@ -36,17 +37,16 @@ export class MapComponent implements OnInit, OnDestroy {
     private robotService: RobotsService,
     private gamesService: GamesService,
     private playerService: PlayerService,
-    private router : Router) { }
+    private router: Router) { }
 
   ngOnInit() {
+    this.games = loadGamesFromLocalStorage();
     this.planetSubscription = interval(this.intervalTime).subscribe(() => this.onGetPlanets());
     this.robotSubscription = interval(this.intervalTime).subscribe(() => this.onGetRobots());
     this.onGetPlayers();
     this.playerService.getPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
-    setTimeout(() => {
-      this.fetching = false;
-    }, 3000);
+    interval(10000).subscribe(() => saveGamesToLocalStorage(this.games));
   }
   private getPosition(planet: Planet): { x: number; y: number } {
     return planet.position || { x: 0, y: 0 };
@@ -62,18 +62,26 @@ export class MapComponent implements OnInit, OnDestroy {
   onGetPlanets() {
     this.planets = this.mapService.getPlanets();
     this.setupGrid();
+    this.fetching = false;
   }
-
+  trackByRowIndex(index: number, row: any): number {
+    return index;
+  }
+  trackByPlanetId(index: number, planet: Planet | null): string | null {
+    return planet ? planet.planetId : null; 
+  }
   onGetGames() {
     this.gamesService.fetchGames().subscribe((games: Game[]) => {
       this.games = games
-      this.intervalTime = this.games[0].roundLengthInMillis
-      if (this.games.length === 0){
+      if (this.games) {
+        this.intervalTime = this.games[0].roundLengthInMillis
+      }
+      if (this.games.length === 0) {
         this.players = [];
         this.robots = [];
         this.planets = [];
       }
-      this.fetching = false;
+      saveGamesToLocalStorage(this.games);
     })
   }
   onGetPlayers() {
@@ -95,7 +103,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     return earnings;
   }
-  
+ 
   calculateSpentOnUpgrades(oldLevels, newLevels) {
     const upgradeCosts = [0, 50, 300, 1500, 4000, 15000];
     if (newLevels.miningLevel > oldLevels.miningLevel) {
@@ -103,7 +111,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     return 0;
   }
-  
+
   getOldRobotById(oldRobots, robotId) {
     return oldRobots.find(oldRobot => oldRobot.robotId === robotId) || null;
   }
@@ -117,7 +125,7 @@ export class MapComponent implements OnInit, OnDestroy {
         const earningsFromCargo = this.calculateEarningsFromCargoChange(oldRobot.cargo, newRobot.cargo);
         const spentOnUpgrades = this.calculateSpentOnUpgrades(oldRobot.levels, newRobot.levels);
         const netBalance = earningsFromCargo - spentOnUpgrades;
-  
+
         const player = players.find(player => player.playerId === newRobot.playerId);
         if (player) {
           player.money += netBalance;
@@ -125,13 +133,13 @@ export class MapComponent implements OnInit, OnDestroy {
       } else if (this.isNewRobot(oldRobots, newRobot)) {
         const player = players.find(player => player.playerId === newRobot.playerId);
         if (player) {
-          player.money -= 100; 
+          player.money -= 100;
         }
       }
     });
   }
-  
-  
+
+
   hasHighlightedRobot(planet: Planet): boolean {
     for (const robot of planet.robots) {
       if (robot.highlighted) {
@@ -145,11 +153,9 @@ export class MapComponent implements OnInit, OnDestroy {
     for (const robot of this.robots) {
       const targetPlanet = this.planets.find(planet => planet.planetId === robot.planetId);
       if (targetPlanet) {
-        const existingRobotIndex = targetPlanet.robots.findIndex(existingRobot => existingRobot.robotId === robot.robotId);
-        if (existingRobotIndex === -1) {
+        const robotExistsOnPlanet = targetPlanet.robots.some(existingRobot => existingRobot.robotId === robot.robotId);
+        if (!robotExistsOnPlanet) {
           targetPlanet.robots.push(robot);
-        } else {
-          targetPlanet.robots[existingRobotIndex] = robot;
         }
       }
     }
@@ -168,9 +174,9 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         }
       });
-      
+
     });
-    this.updatePlayerBalances(this.players,this.oldRobots, this.robots)
+    this.updatePlayerBalances(this.players, this.oldRobots, this.robots)
   }
 
   private setupGrid() {
@@ -203,6 +209,7 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.playerSubscription) {
       this.playerSubscription.unsubscribe();
     }
+    saveGamesToLocalStorage(this.games);
   }
 }
 

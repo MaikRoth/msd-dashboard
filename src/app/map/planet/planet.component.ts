@@ -23,8 +23,9 @@ export type Resource = {
 })
 export class PlanetComponent {
   @Input() planet : Planet;
-  @Input() robots : Robot[];
   @Input() showInfo: boolean;
+
+  imageLoading: boolean = true;
 
   copiedClass = '';
 

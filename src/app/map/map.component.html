@@ -8,35 +8,45 @@
   </div>
 </div>
 <div class="center-container" *ngIf="!fetching && games.length < 1">
-    <div class="text-center">
-        <h4>There is probably no game running at the moment.</h4>
-        <img src="../../assets/images/robots/shrug-robot.png" alt="" style="width: 500px; margin-bottom: 10px;"><br>
-        <button class="btn btn-success" (click)="redirectToControlpanel()">
-          Create a Game
-        </button>
-    </div>
+  <div class="text-center">
+    <h4>There is probably no game running at the moment.</h4>
+    <img
+      src="../../assets/images/robots/shrug-robot.png"
+      alt=""
+      style="width: 500px; margin-bottom: 10px"
+    /><br />
+    <button class="btn btn-success" (click)="redirectToControlpanel()">
+      Create a Game
+    </button>
+  </div>
 </div>
 <div class="container-fluid">
   <div class="row">
     <div class="container">
       <div class="row justify-content-center text-center">
-        <div class="col-md-2" *ngIf="players.length > 0">
+        <div class="col-md-2" *ngIf="players.length > 0 && games.length >= 1">
           <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
         </div>
         <div class="col-md-8">
-            <app-game
-              [game]="games[0]"
-              [planets]="planets"
-              [robots]="robots"
-            ></app-game> 
+          <app-game
+            *ngIf="!fetching"
+            [game]="games[0]"
+            [planets]="planets"
+            [robots]="robots"
+          ></app-game>
           <div class="map-container" *ngIf="games.length > 0">
-            <div class="map-row" *ngFor="let row of grid">
-              <div class="map-cell" *ngFor="let planet of row">
+            <div
+              class="map-row"
+              *ngFor="let row of grid; trackBy: trackByRowIndex"
+            >
+              <div
+                class="map-cell"
+                *ngFor="let planet of row; trackBy: trackByPlanetId"
+              >
                 <app-planet
                   *ngIf="planet; else noPlanet"
                   [planet]="planet"
                   [showInfo]="showPlanetInfo"
-                  [robots]="planet.robots"
                   [class.highlighted]="hasHighlightedRobot(planet)"
                 ></app-planet>
                 <ng-template #noPlanet>
@@ -46,7 +56,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-2" *ngIf="games.length > 0">
+        <div class="col-md-2" *ngIf="games.length > 0 && !fetching">
           <app-settingsbar></app-settingsbar>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GamesService } from '../../games.service';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
+import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../../app.component';
 
 export type Game = {
   gameId: string,
@@ -25,21 +26,27 @@ export class LogComponent implements OnInit, OnDestroy {
   private gamesSubscription: Subscription;
   fetching = true;
 
-  constructor(private gamesService: GamesService, private router : Router) {
+  constructor(private gamesService: GamesService) {
 
   }
   ngOnInit() {
+    const games = loadGamesFromLocalStorage()    
+    if (games.length > 0){
+      this.games = games
+      this.fetching= false
+    }
     this.gamesSubscription = interval(2000)
-      .pipe(switchMap(() => this.gamesService.fetchGames()))
-      .subscribe(res => {
-        this.games = res;
-        this.fetching = false;
-      });
+    .pipe(switchMap(() => this.gamesService.fetchGames()))
+    .subscribe(res => {
+      this.games = res;
+      this.fetching = false;
+    });
   }
 
   ngOnDestroy() {
     if (this.gamesSubscription) {
       this.gamesSubscription.unsubscribe();
     }
+    saveGamesToLocalStorage(this.games)
   }
 }
