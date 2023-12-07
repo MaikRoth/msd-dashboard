@@ -5,9 +5,9 @@ Welcome to the setup guide for the Dashboard. This README will walk you through 
 ## Prerequisites
 
 Before you begin, ensure that you have the following installed on your system:
-- Git
-- Node.js
-- Angular CLI
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en/download/)
+- [Angular CLI](https://angular.io/cli)
 
 ## Installation Steps
 
