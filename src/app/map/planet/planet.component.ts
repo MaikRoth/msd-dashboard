@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Robot } from '../robot/robot.component';
+import { ResourceType, Robot } from '../robot/robot.component';
 
 export type Planet = {
   planetId: string;
-  resourceType: string | null;
+  resourceType: ResourceType | null;
   resource: Resource | null;
   movementDifficulty: number;
   position: { x: number; y: number } | null;
