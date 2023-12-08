@@ -9,8 +9,9 @@
         (click)="toggleCollapse()"
         [attr.aria-expanded]="!isCollapsed"
       >
-        {{ robot.name }} 
-        <img [src]="robot.img" style="width:50px;">
+        {{ robot.name }}
+        <div class="spinner" *ngIf="isLoading"></div>
+        <img [src]="robot.img" style="width:50px;" (load)="isLoading = false">
         <img
           *ngIf="infoToShow === 'Cargo'"
           style="margin-left: 15px;"

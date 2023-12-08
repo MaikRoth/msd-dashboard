@@ -15,7 +15,7 @@ type ScoreboardWithAchievemnts = {
     miningScore: number,
     tradingScore: number,
     travelingScore: number,
-    achievements: { gameId: string, achievement: {name:string,image:string,category:string}}[]
+    achievements: { gameId: string, achievement: { name: string, image: string, category: string } }[]
   }[]
 }
 
@@ -35,6 +35,10 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   constructor(private gameLogService: GamelogService, private gamesService: GamesService) { }
 
   ngOnInit() {
+    const container = document.getElementById('errorContainer');
+    container.addEventListener('mousemove', (e) => {
+      this.handleMouseMove(e);
+    });
     this.scoreboardSubscription = interval(1000).subscribe(() => {
       this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievemnts) => {
         this.scoreboard = res;
@@ -59,7 +63,23 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
         })
     });
   }
+  handleMouseMove(e) {
+    const errorContent = document.getElementById('errorContent');
+    const { clientX, clientY } = e;
+    const { width, height } = errorContent.getBoundingClientRect();
 
+    const xVal = clientX / width;
+    const yVal = clientY / height;
+
+    const tiltX = (yVal - 0.5) * 15; 
+    const tiltY = (xVal - 0.5) * -15; 
+
+    errorContent.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  }
+
+  reloadPage() {
+    window.location.reload();
+  }
   getAchievements() {
 
   }
