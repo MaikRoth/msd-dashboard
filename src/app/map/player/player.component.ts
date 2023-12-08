@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { Robot } from '../robot/robot.component';
 import { RobotsService } from '../../robot.service'
 
@@ -14,28 +14,39 @@ export type Player = {
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent {
+export class PlayerComponent implements OnInit, OnDestroy {
   @Input() player: Player;
-  @Input() tag: string;  
+  @Input() tag: string;
   showRobots = false;
   highlightRobots = false;
 
-  constructor(private robotService : RobotsService){
+  constructor(private robotService: RobotsService) {
 
+  }
+
+  ngOnInit(): void {
+    const money = localStorage.getItem(`[Money] ${this.player.playerId}`)
+    if(money){
+      this.player.money = +money
+    }
   }
 
   toggleInspectRobots() {
     this.showRobots = !this.showRobots;
   }
-
-  toggleHighlightRobots(){
-    if (this.highlightRobots){
+  toggleCollapse(element: ElementRef): void {
+    (element.nativeElement).collapse('toggle');
+  }
+  toggleHighlightRobots() {
+    if (this.highlightRobots) {
       this.highlightRobots = false
       this.robotService.resetHighlightOfPlayer(this.player.playerId)
-    }else {
+    } else {
       this.highlightRobots = true
       this.robotService.highlightRobotsOfPlayer(this.player.playerId)
     }
   }
-
+  ngOnDestroy(): void {
+      localStorage.setItem(this.player.money.toString(), `[Money] ${this.player.playerId}`)
+  }
 }

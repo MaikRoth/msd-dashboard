@@ -26,6 +26,7 @@ export class MapService {
             },
             error: (error) => {
                 console.error('Error fetching planets:', error);
+                return [error]
             }
         });
     }

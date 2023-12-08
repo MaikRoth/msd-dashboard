@@ -1,9 +1,11 @@
-<div class="center-container" *ngIf="!game">
-    <div class="text-center">
-        <h4>There is probably no game running at the moment.</h4>
-        <img src="../../assets/images/robots/shrug-robot.png" alt="" style="width: 500px; margin-bottom: 10px;"><br>
-    </div>
+<div class="error-container" id="errorContainer">
+  <div class="error-content" id="errorContent">
+      <h1>Unavailable!</h1>
+      <p>Nothing to see here. Start a game first.</p>
+      <button (click)="reloadPage()">No</button>
+  </div>
 </div>
+
 <div class="container" *ngIf="game">
   <div class="row justify-content-center text-center">
     <h2>Scoreboard</h2>

@@ -87,14 +87,10 @@ export class RobotComponent {
   @Input() robot: Robot
   @Input() infoToShow: string;
 
-  isDarkred = false;
-
-
-
   constructor(private robotService: RobotsService) { }
 
-
   isCollapsed = true;
+  isLoading = true;
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;

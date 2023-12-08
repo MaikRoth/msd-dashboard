@@ -16,7 +16,7 @@ import { RobotComponent } from './map/robot/robot.component';
 import { SettingsbarComponent } from './map/settingsbar/settingsbar.component';
 import { StoreModule } from '@ngrx/store';
 import { HomeComponent } from './home/home.component';
-import { customGamesReducer, planetsReducer, playersReducer, robotsReducer } from './store/dashboard.reducer';
+import { customGamesReducer, mapReducer } from './store/dashboard.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.component';
 
@@ -36,7 +36,7 @@ import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.
     RobotComponent,
     SettingsbarComponent,
     HomeComponent,
-    GameshandlerComponent
+    GameshandlerComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,10 +44,9 @@ import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(
-      { customGames: customGamesReducer,
-        robots: robotsReducer,
-        planets: planetsReducer,
-        players: playersReducer 
+      { 
+        customGames: customGamesReducer,
+        map: mapReducer
       }),
     EffectsModule.forRoot([])
   ],

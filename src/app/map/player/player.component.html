@@ -30,7 +30,7 @@
       *ngIf="showRobots"
       style="margin-top: 3px; max-height: 700px; overflow: auto;"
     >
-      <app-robot
+      <app-robot 
         *ngFor="let robo of player.robots"
         [robot]="robo"
         [infoToShow]="tag"
