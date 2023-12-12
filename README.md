@@ -2,6 +2,21 @@
 
 Welcome to the setup guide for the Dashboard. This README will walk you through the steps required to clone the repository and get the Dashboard running on your machine.
 
+# Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Local Setup](#local-setup)
+    1. [Step 1: Prepare the Directory](#step-1-prepare-the-directory)
+    2. [Step 2: Clone the Repository](#step-2-clone-the-repository)
+    3. [Step 3: Navigate to the Repository Folder](#step-3-navigate-to-the-repository-folder)
+    4. [Step 4: Install Dependencies](#step-4-install-dependencies)
+    5. [Step 5: Run the Application](#step-5-run-the-application)
+3. [Docker Container Setup](#docker-container-setup)
+    1. [Step 1: Clone the Repository](#step-1-clone-the-repository-docker)
+    2. [Step 2: Navigate to the Repository Folder](#step-2-navigate-to-the-repository-folder-docker)
+    3. [Step 3: Docker Container Setup](#step-3-docker-container-setup)
+4. [Usage](#usage)
+5. [Troubleshooting](#troubleshooting)
+
 ## Prerequisites
 
 Before you begin, ensure that you have the following installed on your system:
