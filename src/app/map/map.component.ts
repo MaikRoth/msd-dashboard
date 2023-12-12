@@ -51,10 +51,11 @@ export class MapComponent implements OnInit, OnDestroy {
     this.robotSubscription = interval(this.intervalTime).subscribe(() => this.onGetRobots());
     this.onGetPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
-    this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
-      document.getElementById('map-container').style.backgroundColor = color;
+    document.addEventListener('DOMContentLoaded', () => {    
+      this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
+        document.getElementById('map-container').style.backgroundColor = color;
+      });
     });
-
   }
   handleMouseMove(event: MouseEvent, imageId: string) {
     const img = document.getElementById(imageId) as HTMLImageElement;

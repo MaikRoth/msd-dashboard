@@ -42,7 +42,6 @@ export class DataService {
             }
           }
   
-          // Populate the grid with planets
           for (let planet of planets) {
             const position = this.getPosition(planet);
             this.grid[position.y][position.x] = planet;

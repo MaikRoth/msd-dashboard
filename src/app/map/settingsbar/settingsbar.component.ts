@@ -15,6 +15,10 @@ export class SettingsbarComponent {
   isCollapsed: boolean = true;
   showAchievements: boolean = false;
 
+  toggleDarkMode(){
+    this.sharedService.toggleDarkMode()
+  }
+
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }

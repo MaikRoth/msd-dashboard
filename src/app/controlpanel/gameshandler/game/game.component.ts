@@ -12,8 +12,10 @@ export class GameComponent implements OnInit {
   @Input() game: Game;
   @Input() planets;
   @Input() robots;
+  @Input() totalScore;
+  @Input() achievements;
   
-  collapsedStates: Map<string, boolean> = new Map(); // Track collapsed state for each game
+  collapsedStates: Map<string, boolean> = new Map();
 
   constructor(private gamesService: GamesService, private router: Router) {}
 

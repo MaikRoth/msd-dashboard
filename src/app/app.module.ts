@@ -15,7 +15,6 @@ import { PlayerComponent } from './map/player/player.component';
 import { RobotComponent } from './map/robot/robot.component';
 import { SettingsbarComponent } from './map/settingsbar/settingsbar.component';
 import { StoreModule } from '@ngrx/store';
-import { HomeComponent } from './home/home.component';
 import { customGamesReducer, mapReducer } from './store/dashboard.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.component';
@@ -35,7 +34,6 @@ import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.
     PlayerComponent,
     RobotComponent,
     SettingsbarComponent,
-    HomeComponent,
     GameshandlerComponent,
   ],
   imports: [

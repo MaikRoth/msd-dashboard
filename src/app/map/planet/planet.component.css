@@ -18,7 +18,43 @@
   border-radius: 10px; 
   transition: transform 0.3s, box-shadow 0.3s;
 }
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
 
+.custom-tooltip {
+  visibility: hidden;
+  width: 100px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -50px; 
+
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .custom-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.custom-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
 .highlighted:hover {
   transform: scale(1.15);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);

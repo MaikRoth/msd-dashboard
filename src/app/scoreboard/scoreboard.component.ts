@@ -31,14 +31,11 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   private scoreboardSubscription: Subscription;
   private gameSubscription: Subscription;
   rounds: number;
-
+  fetching = true;
   constructor(private gameLogService: GamelogService, private gamesService: GamesService) { }
 
   ngOnInit() {
-    const container = document.getElementById('errorContainer');
-    container.addEventListener('mousemove', (e) => {
-      this.handleMouseMove(e);
-    });
+   
     this.scoreboardSubscription = interval(1000).subscribe(() => {
       this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievemnts) => {
         this.scoreboard = res;
@@ -59,9 +56,20 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
           if (res.length > 0) {
             this.rounds = res[0].maxRounds
             this.game = res[0];
+            this.fetching = false;
           }
         })
     });
+    const container = document.getElementById('errorContainer');
+    if (container){
+      container.addEventListener('mousemove', (e) => {
+        this.handleMouseMove(e);
+      });
+    }
+    setTimeout(() => {
+      this.fetching = false;
+    }, 10000);
+  
   }
   handleMouseMove(e) {
     const errorContent = document.getElementById('errorContent');
@@ -79,9 +87,6 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
 
   reloadPage() {
     window.location.reload();
-  }
-  getAchievements() {
-
   }
 
   ngOnDestroy(): void {

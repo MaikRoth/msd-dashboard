@@ -70,12 +70,12 @@ const energyColors = {
 };
 
 export enum ResourceType {
-  COAL = "../../../assets/images/materials/32/coal.png",
-  IRON = "../../../assets/images/materials/32/iron.png",
-  GEM = "../../../assets/images/materials/32/gem.png",
-  PLATIN = "../../../assets/images/materials/32/platin.png",
-  GOLD = "../../../assets/images/materials/32/gold.png",
-  NOTHING = "../../../assets/images/materials/32/empty.png"
+  COAL = "../../../assets/images/materials/coal.png",
+  IRON = "../../../assets/images/materials/iron.png",
+  GEM = "../../../assets/images/materials/gem.png",
+  PLATIN = "../../../assets/images/materials/platin.png",
+  GOLD = "../../../assets/images/materials/gold.png",
+  NOTHING = "../../../assets/images/materials/empty.png"
 }
 
 @Component({

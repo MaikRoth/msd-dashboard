@@ -40,13 +40,28 @@ export class PlanetComponent implements OnInit, OnDestroy {
       this.robotImageSize = size;
     });
     this.planet.robots.forEach(robot => {
-      this.robotsLoading[robot.robotId] = true; 
+      this.robotsLoading[robot.robotId] = true;
     });
   }
   onRobotImageLoad(robotId: string) {
-    this.robotsLoading[robotId] = false; 
+    this.robotsLoading[robotId] = false;
   }
-
+  getResourceName(resourceType: ResourceType) {
+    switch (resourceType) {
+      case ResourceType.COAL:
+        return "Coal"
+      case ResourceType.IRON:
+        return "Iron"
+      case ResourceType.GEM:
+        return "Gem"
+      case ResourceType.GOLD:
+        return "Gold"
+      case ResourceType.PLATIN:
+        return "Platin"
+      default:
+        return 'nothing'
+    }
+  }
   allRobotsLoaded(): boolean {
     return Object.values(this.robotsLoading).every(status => !status);
   }
@@ -66,8 +81,8 @@ export class PlanetComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
-  } 
-  
+  }
+
   ngOnDestroy() {
     if (this.imageSizeSubscription) {
       this.imageSizeSubscription.unsubscribe();

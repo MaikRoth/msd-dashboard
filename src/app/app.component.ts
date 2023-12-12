@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CustomGame } from './controlpanel/controlpanel.component';
 import { Store } from '@ngrx/store';
 import { init } from './store/dashboard.actions';
@@ -7,7 +7,8 @@ import { Game } from './controlpanel/gameshandler/gameshandler.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
   ngOnInit(): void {

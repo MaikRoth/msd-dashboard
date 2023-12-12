@@ -1,8 +1,13 @@
-<div class="error-container" id="errorContainer">
+<div class="error-container" id="errorContainer" *ngIf="!game && !fetching">
   <div class="error-content" id="errorContent">
-      <h1>Unavailable!</h1>
-      <p>Nothing to see here. Start a game first.</p>
-      <button (click)="reloadPage()">No</button>
+    <h1>Unavailable!</h1>
+    <p>Start a game first and make sure the GameLog is running!</p>
+    <button (click)="reloadPage()">No</button>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="fetching">
+  <div class="spinner-border" role="status">
+    <span class="sr-only"></span>
   </div>
 </div>
 
@@ -37,13 +42,10 @@
         <strong>Total Points</strong>
       </li>
     </ul>
-    <ul
-      class="list-group list-group-horizontal"
-      *ngFor="
+    <ul class="list-group list-group-horizontal" *ngFor="
         let entrie of scoreboard.scoreboardEntriesWithAchievements;
         let i = index
-      "
-    >
+      ">
       <li class="list-group-item" *ngIf="i + 1 === 1"><strong>{{ i + 1 }}</strong></li>
       <li class="list-group-item" *ngIf="i + 1 !== 1">{{ i + 1 }}</li>
       <li class="list-group-item">{{ entrie.player.name }}</li>
@@ -74,19 +76,12 @@
           <!-- Mining Achievements -->
           <td>
             <ng-container *ngFor="let achievement of entry.achievements">
-              <div
-                *ngIf="
+              <div *ngIf="
                   achievement.achievement.category === 'MINING' &&
                   achievement.gameId === game.gameId
-                "
-                class="achievement-badge"
-              >
-                <img
-                  [src]="achievement.achievement.image"
-                  alt="Mining Achievement"
-                  title="{{ achievement.achievement.name }} "
-                  style="width: 100px"
-                />
+                " class="achievement-badge">
+                <img [src]="achievement.achievement.image" alt="Mining Achievement"
+                  title="{{ achievement.achievement.name }} " style="width: 100px" />
               </div>
             </ng-container>
           </td>
@@ -94,19 +89,12 @@
           <!-- Traveling Achievements -->
           <td>
             <ng-container *ngFor="let achievement of entry.achievements">
-              <div
-                *ngIf="
+              <div *ngIf="
                   achievement.achievement.category === 'TRAVELING' &&
                   achievement.gameId === game.gameId
-                "
-                class="achievement-badge"
-              >
-                <img
-                  [src]="achievement.achievement.image"
-                  alt="Traveling Achievement"
-                  title="{{ achievement.achievement.name }}"
-                  style="width: 100px"
-                />
+                " class="achievement-badge">
+                <img [src]="achievement.achievement.image" alt="Traveling Achievement"
+                  title="{{ achievement.achievement.name }}" style="width: 100px" />
               </div>
             </ng-container>
           </td>
@@ -114,19 +102,12 @@
           <!-- Trading Achievements -->
           <td>
             <ng-container *ngFor="let achievement of entry.achievements">
-              <div
-                *ngIf="
+              <div *ngIf="
                   achievement.achievement.category === 'TRADING' &&
                   achievement.gameId === game.gameId
-                "
-                class="achievement-badge"
-              >
-                <img
-                  [src]="achievement.achievement.image"
-                  alt="Trading Achievement"
-                  title="{{ achievement.achievement.name }}"
-                  style="width: 100px"
-                />
+                " class="achievement-badge">
+                <img [src]="achievement.achievement.image" alt="Trading Achievement"
+                  title="{{ achievement.achievement.name }}" style="width: 100px" />
               </div>
             </ng-container>
           </td>
@@ -134,19 +115,12 @@
           <!-- Fighting Achievements -->
           <td>
             <ng-container *ngFor="let achievement of entry.achievements">
-              <div
-                *ngIf="
+              <div *ngIf="
                   achievement.achievement.category === 'FIGHTING' &&
                   achievement.gameId === game.gameId
-                "
-                class="achievement-badge"
-              >
-                <img
-                  [src]="achievement.achievement.image"
-                  alt="Fighting Achievement"
-                  title="{{ achievement.achievement.name }}"
-                  style="width: 100px"
-                />
+                " class="achievement-badge">
+                <img [src]="achievement.achievement.image" alt="Fighting Achievement"
+                  title="{{ achievement.achievement.name }}" style="width: 100px" />
               </div>
             </ng-container>
           </td>
