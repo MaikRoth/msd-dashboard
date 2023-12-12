@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  app:
+  dashboard:
     build: 
       context: .
       dockerfile: Dockerfile
