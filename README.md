@@ -53,8 +53,27 @@ Finally, to start the Dashboard, run:
 ng serve
 ```
 
-
 This will start the Angular development server and the Dashboard should be accessible at `http://localhost:4200`.
+
+## Docker Container Setup
+
+### Step 1: Clone the Repository
+Follow the same steps as in the local setup to clone the repository.
+
+### Step 2: Navigate to the Repository Folder
+
+```
+cd msd-dashboard
+```
+
+### Step 3: Docker Container Setup
+In Powershell, set up the Docker container by running:
+
+```
+docker-compose up
+```
+
+This command will create and start the necessary Docker containers.
 
 ## Usage
 
