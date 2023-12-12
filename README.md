@@ -14,7 +14,7 @@ Before you begin, ensure that you have the following installed on your system:
 
 **Important:** It is crucial to have the local development environment, the backend and the gamelog up and running for the Dashboard to function correctly. Please follow the steps provided in their respective links to set up these components before proceeding.
 
-## Installation Steps
+## Local Setup
 
 ### Step 1: Prepare the Directory
 First, you need to create or navigate to the directory where you want to clone the repository. Open your terminal or command prompt and use the `cd` command to navigate to your desired directory.
