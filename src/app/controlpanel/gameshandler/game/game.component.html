@@ -1,0 +1,68 @@
+<div class="game-card" *ngIf="game">
+  <div class="game-title" (click)="toggleCollapse(game.gameId)">
+    <h2>Game: {{ game.gameId }}</h2>
+    <div class="game-stats">
+      <span
+        class="status-badge"
+        [class.playing]="game.gameStatus === 'started'"
+        (click)="redirectToMap()"
+        >{{ game.gameStatus }}</span
+      >
+      <span class="game-info" *ngIf="planets"
+        >Planets: <strong>{{ planets.length }}</strong></span
+      >
+      <span class="game-info" *ngIf="robots"
+        >Robots: <strong>{{ robots.length }}</strong></span
+      >
+    </div>
+  </div>
+  <div class="game-body" *ngIf="!collapsedStates.get(game.gameId)">
+    <div class="game-details">
+      <div class="detail">
+        Max Players: <strong>{{ game.maxPlayers }}</strong>
+      </div>
+      <div class="detail">
+        Max Rounds: <strong>{{ game.maxRounds }}</strong>
+      </div>
+      <div class="detail">
+        Current Round: <strong>{{ game.currentRoundNumber }}</strong>
+      </div>
+      <div class="detail">
+        Round Time: <strong>{{ game.roundLengthInMillis }}ms</strong>
+      </div>
+      <div class="detail" *ngIf="planets">
+        Planets: <strong>{{ planets.length }}</strong>
+      </div>
+      <div class="detail" *ngIf="robots">
+        Robots: <strong>{{ robots.length }}</strong>
+      </div>
+    </div>
+
+    <div class="player-section">
+      <h3>Players</h3>
+      <ul *ngIf="game.participatingPlayers.length; else noPlayers">
+        <li *ngFor="let player of game.participatingPlayers">{{ player }}</li>
+      </ul>
+      <ng-template #noPlayers>
+        <p class="no-players">No Players</p>
+      </ng-template>
+    </div>
+
+    <div class="game-actions">
+      <button
+        class="action-btn start-game"
+        (click)="onStartGame(game.gameId)"
+        *ngIf="game.gameStatus === 'created'"
+      >
+        Start Game
+      </button>
+      <button
+        class="action-btn end-game"
+        (click)="onEndGame(game.gameId)"
+        [disabled]="game.gameStatus === 'created'"
+      >
+        End Game
+      </button>
+    </div>
+  </div>
+</div>

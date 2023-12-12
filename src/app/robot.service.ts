@@ -17,9 +17,7 @@ export class RobotsService {
         this.http.get(this.robotsEndpoint).subscribe({
             next: (res: any[]) => {
                 const updatedRobots = res.map(robotData => this.mapToRobot(robotData));
-    
                 let newRobotsArray: Robot[] = [];
-    
                 updatedRobots.forEach(newRobot => {
                     const existingRobot = this.robots.find(r => r.robotId === newRobot.robotId);
     

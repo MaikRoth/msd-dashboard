@@ -1,11 +1,8 @@
 import { Injectable } from "@angular/core";
 import { GamesService } from "./games.service";
 import { HttpClient } from "@angular/common/http";
-import { Game } from "./controlpanel/log/log.component";
 import { Player } from './map/player/player.component';
-import { RobotsService } from "./robot.service";
-import { Robot } from "./map/robot/robot.component";
-import { Observable, switchMap, of, catchError, Subject } from "rxjs";
+import { switchMap, of, catchError, Subject, Observable, map } from "rxjs";
 
 type Entrie = {
     player: {
@@ -19,6 +16,23 @@ type Entrie = {
         category: string
     }
 }
+type Scoreboard = {
+    gameId: string,
+    gameStatus: string,
+    roundNumber: number,
+    scoreboardEntries: ScoreboardEntries[]
+}
+type ScoreboardEntries = {
+    player: {
+        id : string,
+        name: string,
+    },
+    totalScore: number,
+    fightingScore: number,
+    miningScore: number,
+    tradingScore:number,
+    travelingScore:number
+}
 type AchievementsResponse = {
     gameId: string,
     playerAchievements: Entrie[]
@@ -27,45 +41,28 @@ type AchievementsResponse = {
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
 
-    private playersEndpoint = 'http://localhost:8089/achievements'
-
     constructor(
-        private http: HttpClient,
-        private gameService: GamesService) { }
+        private http: HttpClient) { }
 
-    private players$ = new Subject<Player[]>();
-
-    getPlayers() {
-        this.gameService.getPlayingPlayers().pipe(
-            switchMap((playingPlayers: string[]) => {
-                let players: Player[] = [];
-                return this.http.get<AchievementsResponse>(this.playersEndpoint).pipe(
-                    switchMap((res: AchievementsResponse) => {
-                        res.playerAchievements.forEach(entrie => {
-                            if (playingPlayers.includes(entrie.player.name) && players.length < playingPlayers.length && !players.some(player => player.name === entrie.player.name)) {
-                                players.push({
-                                    playerId: entrie.player.id,
-                                    name: entrie.player.name,
-                                    money: 500,
-                                    robots: []
-                                });
-                            }
-                        });
-                        this.players$.next(players);
-                        return of(players);
-                    }),
-                    catchError(error => {
-                        console.error('Error fetching players:', error);
-                        return of([]);
-                    })
-                );
-            })
-        ).subscribe();
-    }
-
-    getPlayersObservable() {
-        return this.players$.asObservable();
-    }
-
-   
+    getPlayers(): Observable<Player[]> {
+        return this.http.get<any[]>('http://localhost:8080/games').pipe(
+          map(games => games.flatMap(game => game.participatingPlayers)),
+          map(playerNames => {
+            return this.http.get<{ scoreboardEntries: any[] }>('http://localhost:8089/scoreboard').pipe(
+              map(scoreboard => {
+                return playerNames.map(name => {
+                  const playerScoreboard = scoreboard.scoreboardEntries.find(entry => entry.player.name === name);
+                  return {
+                    playerId: playerScoreboard?.player.id,
+                    name: name,
+                    robots: [],
+                    money: 500
+                  };
+                });
+              })
+            );
+          }),
+          switchMap(playerObservable => playerObservable)
+        );
+      }
 }

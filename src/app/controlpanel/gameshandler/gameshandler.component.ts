@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GamesService } from '../../games.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, interval, switchMap } from 'rxjs';
-import { Router } from '@angular/router';
 import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../../app.component';
+import { GamesService } from '../../games.service';
 
 export type Game = {
   gameId: string,
@@ -14,14 +13,13 @@ export type Game = {
   roundLengthInMillis: number,
 }
 
-@Component({
-  selector: 'app-log',
-  templateUrl: './log.component.html',
-  styleUrl: './log.component.css',
-  providers: [GamesService]
-})
-export class LogComponent implements OnInit, OnDestroy {
 
+@Component({
+  selector: 'app-gameshandler',
+  templateUrl: './gameshandler.component.html',
+  styleUrl: './gameshandler.component.css'
+})
+export class GameshandlerComponent implements OnInit, OnDestroy {
   games: Game[];
   private gamesSubscription: Subscription;
   fetching = true;
@@ -30,17 +28,19 @@ export class LogComponent implements OnInit, OnDestroy {
 
   }
   ngOnInit() {
-    const games = loadGamesFromLocalStorage()    
-    if (games.length > 0){
+    const games = loadGamesFromLocalStorage()
+    console.log(games);
+    
+    if (games) {
       this.games = games
-      this.fetching= false
+      this.fetching = false
     }
     this.gamesSubscription = interval(2000)
-    .pipe(switchMap(() => this.gamesService.fetchGames()))
-    .subscribe(res => {
-      this.games = res;
-      this.fetching = false;
-    });
+      .pipe(switchMap(() => this.gamesService.fetchGames()))
+      .subscribe(res => {
+        this.games = res;
+        this.fetching = false;
+      });
   }
 
   ngOnDestroy() {

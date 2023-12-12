@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, map, mergeMap, of } from "rxjs";
-import { Game } from "./controlpanel/log/log.component";
+import { Game } from "./controlpanel/gameshandler/gameshandler.component";
 
 @Injectable({
   providedIn: 'root'

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SharedService } from '../../shared/shared.service';
 
 @Component({
   selector: 'app-settingsbar',
@@ -7,4 +8,29 @@ import { Component } from '@angular/core';
 })
 export class SettingsbarComponent {
 
+
+  constructor(private sharedService: SharedService) {}
+
+  
+  isCollapsed: boolean = true;
+  showAchievements: boolean = false;
+
+  toggleDarkMode(){
+    this.sharedService.toggleDarkMode()
+  }
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+  changeRobotImageSize(size: string) {
+    this.sharedService.setRobotImageSize(size);
+  }
+
+  toggleAchievements() {
+    this.showAchievements = !this.showAchievements;
+  }
+
+  changeBackgroundColor(event: any) {
+    this.sharedService.changeBackgroundColor(event.target.value);
+  }
 }

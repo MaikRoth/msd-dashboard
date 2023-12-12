@@ -2,8 +2,8 @@
     width: 100%;
     justify-content: center;
     display: flex;
+    margin-right: 60px;
 }
-
 .navbar {
     align-items: center;
     font-size: larger;

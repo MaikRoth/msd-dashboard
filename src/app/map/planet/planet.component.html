@@ -1,19 +1,24 @@
-<div class="container planet" (click)="copyToClipboard(planet.planetId)">
+<div class="container planet" [ngClass]="{'highlighted': planet.highlighted}" (click)="copyToClipboard(planet.planetId)">
     <div class="row">
-        <div class="col-6">
-            <img [src]="planet.resourceType" alt="" class="planet-image" *ngIf="planet.resource.capacity>0">
-        </div>
-        <div class="col-6 planetInfo" [ngClass]="{'always-show': showInfo}" *ngIf="planet.resource.amount > 0">
-            {{formatNumber(planet.resource.amount)}}
-        </div>
+      <div class="col-6">
+        <div class="tooltip-container">
+            <img [src]="planet.resourceType" style="width: 32px;" alt="" class="planet-image" *ngIf="planet.resource.capacity > 0">
+            <span class="custom-tooltip">{{ getResourceName(planet.resourceType) }}</span>
+          </div>
+      </div>
+      <div class="col-6 planetInfo" [ngClass]="{'always-show': showInfo}" *ngIf="planet.resource.amount > 0">
+        {{ formatNumber(planet.resource.amount) }}
+      </div>
     </div>
     <div class="copied-message" [class]="copiedClass">Copied!</div>
     <div class="row">
-        <div class="col-12" *ngIf="planet.robots.length>0">
-            <div class="robots-container">
-                <div class="spinner" *ngIf="imageLoading"></div>
-                <img *ngFor="let robot of planet.robots" [src]="robot.img" alt="" class="robot-image" (load)="imageLoading = false">
-            </div>
+      <div class="col-12" *ngIf="planet.robots.length > 0">
+        <div class="robots-container">
+          <div class="spinner" *ngIf="!allRobotsLoaded()"></div>
+          <img *ngFor="let robot of planet.robots" [src]="robot.img" alt="" class="robot-image" 
+               (load)="onRobotImageLoad(robot.robotId)">
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  

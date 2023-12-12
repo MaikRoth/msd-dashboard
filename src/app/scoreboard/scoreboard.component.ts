@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GamelogService } from './gamelog.service';
-import { Subscription, catchError, interval, of } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { GamesService } from '../games.service';
-import { Game } from '../controlpanel/log/log.component';
+import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 
 type ScoreboardWithAchievemnts = {
   gameId: string,
@@ -15,7 +15,7 @@ type ScoreboardWithAchievemnts = {
     miningScore: number,
     tradingScore: number,
     travelingScore: number,
-    achievements: { gameId: string, achievement: {name:string,image:string,category:string}}[]
+    achievements: { gameId: string, achievement: { name: string, image: string, category: string } }[]
   }[]
 }
 
@@ -31,10 +31,11 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   private scoreboardSubscription: Subscription;
   private gameSubscription: Subscription;
   rounds: number;
-
+  fetching = true;
   constructor(private gameLogService: GamelogService, private gamesService: GamesService) { }
 
   ngOnInit() {
+   
     this.scoreboardSubscription = interval(1000).subscribe(() => {
       this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievemnts) => {
         this.scoreboard = res;
@@ -55,13 +56,37 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
           if (res.length > 0) {
             this.rounds = res[0].maxRounds
             this.game = res[0];
+            this.fetching = false;
           }
         })
     });
+    const container = document.getElementById('errorContainer');
+    if (container){
+      container.addEventListener('mousemove', (e) => {
+        this.handleMouseMove(e);
+      });
+    }
+    setTimeout(() => {
+      this.fetching = false;
+    }, 10000);
+  
+  }
+  handleMouseMove(e) {
+    const errorContent = document.getElementById('errorContent');
+    const { clientX, clientY } = e;
+    const { width, height } = errorContent.getBoundingClientRect();
+
+    const xVal = clientX / width;
+    const yVal = clientY / height;
+
+    const tiltX = (yVal - 0.5) * 15; 
+    const tiltY = (xVal - 0.5) * -15; 
+
+    errorContent.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
   }
 
-  getAchievements() {
-
+  reloadPage() {
+    window.location.reload();
   }
 
   ngOnDestroy(): void {

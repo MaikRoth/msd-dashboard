@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MapService } from '../map.service';
 import { Subscription, interval } from 'rxjs';
 import { RobotsService } from '../robot.service';
 import { GamesService } from '../games.service';
-import { Game } from '../controlpanel/log/log.component';
 import { PlayerService } from '../player.service';
 import { Player } from './player/player.component';
 import { Robot } from './robot/robot.component';
 import { Planet } from './planet/planet.component';
 import { Router } from '@angular/router';
 import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../app.component';
+import { Game } from '../controlpanel/gameshandler/gameshandler.component';
+import { Store } from '@ngrx/store';
+import { SharedService } from '../shared/shared.service';
 
 @Component({
   selector: 'app-map',
@@ -20,38 +22,65 @@ export class MapComponent implements OnInit, OnDestroy {
   planets: Planet[] = [];
   robots: Robot[] = [];
   grid: (Planet | null)[][] = [];
-  games: Game[] = [];
   players: Player[] = [];
+  games: Game[]
+
   private intervalTime = 5000;
   fetching = true;
   showPlanetInfo = true;
+  errorUrl: string = "";
 
   private oldRobots: Robot[];
-
+  private backgroundSubscription: Subscription;
   private planetSubscription: Subscription;
   private robotSubscription: Subscription;
   private gamesSubscription: Subscription;
   private playerSubscription: Subscription;
   constructor(
+    private sharedService: SharedService,
     private mapService: MapService,
     private robotService: RobotsService,
     private gamesService: GamesService,
     private playerService: PlayerService,
-    private router: Router) { }
+    private router: Router,
+    private store: Store<{ robot: Robot[], player: Player[], }>) { }
 
   ngOnInit() {
     this.games = loadGamesFromLocalStorage();
     this.planetSubscription = interval(this.intervalTime).subscribe(() => this.onGetPlanets());
     this.robotSubscription = interval(this.intervalTime).subscribe(() => this.onGetRobots());
     this.onGetPlayers();
-    this.playerService.getPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
-    interval(10000).subscribe(() => saveGamesToLocalStorage(this.games));
+    document.addEventListener('DOMContentLoaded', () => {    
+      this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
+        document.getElementById('map-container').style.backgroundColor = color;
+      });
+    });
+  }
+  handleMouseMove(event: MouseEvent, imageId: string) {
+    const img = document.getElementById(imageId) as HTMLImageElement;
+
+    const { width, height, left, top } = img.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    const deltaX = (mouseX - centerX) / width;
+    const deltaY = (mouseY - centerY) / height;
+
+    const tiltX = deltaY * 20;
+    const tiltY = deltaX * -20;
+
+    img.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.05)`;
+  }
+
+  resetTilt(imageId: string) {
+    const img = document.getElementById(imageId) as HTMLImageElement;
+    img.style.transform = 'none';
   }
   private getPosition(planet: Planet): { x: number; y: number } {
     return planet.position || { x: 0, y: 0 };
   }
-
   onGetRobots() {
     this.oldRobots = this.robots;
     this.robots = this.robotService.getRobots();
@@ -68,8 +97,9 @@ export class MapComponent implements OnInit, OnDestroy {
     return index;
   }
   trackByPlanetId(index: number, planet: Planet | null): string | null {
-    return planet ? planet.planetId : null; 
+    return planet ? planet.planetId : null;
   }
+
   onGetGames() {
     this.gamesService.fetchGames().subscribe((games: Game[]) => {
       this.games = games
@@ -85,7 +115,7 @@ export class MapComponent implements OnInit, OnDestroy {
     })
   }
   onGetPlayers() {
-    this.playerService.getPlayersObservable().subscribe((players: Player[]) => {
+    this.playerService.getPlayers().subscribe((players: Player[]) => {
       this.players = players;
     });
   }
@@ -103,7 +133,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     return earnings;
   }
- 
+
   calculateSpentOnUpgrades(oldLevels, newLevels) {
     const upgradeCosts = [0, 50, 300, 1500, 4000, 15000];
     if (newLevels.miningLevel > oldLevels.miningLevel) {
@@ -150,12 +180,17 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private updatePlanets() {
+    this.planets.forEach(planet => planet.highlighted = false);
+
     for (const robot of this.robots) {
       const targetPlanet = this.planets.find(planet => planet.planetId === robot.planetId);
       if (targetPlanet) {
-        const robotExistsOnPlanet = targetPlanet.robots.some(existingRobot => existingRobot.robotId === robot.robotId);
-        if (!robotExistsOnPlanet) {
+        const robotIndex = targetPlanet.robots.findIndex(existingRobot => existingRobot.robotId === robot.robotId);
+        if (robotIndex === -1) {
           targetPlanet.robots.push(robot);
+        }
+        if (robot.highlighted) {
+          targetPlanet.highlighted = true;
         }
       }
     }
@@ -208,6 +243,9 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     if (this.playerSubscription) {
       this.playerSubscription.unsubscribe();
+    }
+    if (this.backgroundSubscription) {
+      this.backgroundSubscription.unsubscribe();
     }
     saveGamesToLocalStorage(this.games);
   }

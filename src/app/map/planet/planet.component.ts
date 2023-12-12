@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ResourceType, Robot } from '../robot/robot.component';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../shared/shared.service';
 
 export type Planet = {
   planetId: string;
@@ -21,13 +23,48 @@ export type Resource = {
   templateUrl: './planet.component.html',
   styleUrl: './planet.component.css'
 })
-export class PlanetComponent {
-  @Input() planet : Planet;
+export class PlanetComponent implements OnInit, OnDestroy {
+  @Input() planet: Planet;
   @Input() showInfo: boolean;
 
-  imageLoading: boolean = true;
-
+  robotsLoading: Record<string, boolean> = {};
+  robotImageSize: string;
   copiedClass = '';
+
+  private imageSizeSubscription: Subscription;
+
+  constructor(private sharedService: SharedService) { }
+
+  ngOnInit() {
+    this.imageSizeSubscription = this.sharedService.robotImageSize.subscribe(size => {
+      this.robotImageSize = size;
+    });
+    this.planet.robots.forEach(robot => {
+      this.robotsLoading[robot.robotId] = true;
+    });
+  }
+  onRobotImageLoad(robotId: string) {
+    this.robotsLoading[robotId] = false;
+  }
+  getResourceName(resourceType: ResourceType) {
+    switch (resourceType) {
+      case ResourceType.COAL:
+        return "Coal"
+      case ResourceType.IRON:
+        return "Iron"
+      case ResourceType.GEM:
+        return "Gem"
+      case ResourceType.GOLD:
+        return "Gold"
+      case ResourceType.PLATIN:
+        return "Platin"
+      default:
+        return 'nothing'
+    }
+  }
+  allRobotsLoaded(): boolean {
+    return Object.values(this.robotsLoading).every(status => !status);
+  }
 
   formatNumber(num: number): string {
     if (num >= 1000) {
@@ -45,5 +82,10 @@ export class PlanetComponent {
       console.error('Failed to copy: ', err);
     }
   }
-  
+
+  ngOnDestroy() {
+    if (this.imageSizeSubscription) {
+      this.imageSizeSubscription.unsubscribe();
+    }
+  }
 }
