@@ -149,7 +149,7 @@ export class RobotComponent {
     } else if (cargo.gold > max) {
       return "gold"
     } else if (cargo.platin > max) {
-      return "pltin"
+      return "platin"
     } else {
       return "empty"
     }
@@ -158,15 +158,15 @@ export class RobotComponent {
   getMaterialImage(material: string) {
     switch (material) {
       case 'coal':
-        return '../../../assets/images/materials/32/coal.png'
+        return '../../../assets/images/materials/coal.png'
       case 'iron':
-        return '../../../assets/images/materials/32/iron.png'
+        return '../../../assets/images/materials/iron.png'
       case 'gem':
-        return '../../../assets/images/materials/32/gem.png'
+        return '../../../assets/images/materials/gem.png'
       case 'gold':
-        return '../../../assets/images/materials/32/gold.png'
+        return '../../../assets/images/materials/gold.png'
       case 'platin':
-        return '../../../assets/images/materials/32/platin.png'
+        return '../../../assets/images/materials/platin.png'
       default:
         return '../../../assets/images/icons/empty.png'
     }

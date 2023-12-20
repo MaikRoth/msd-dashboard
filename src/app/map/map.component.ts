@@ -204,7 +204,7 @@ export class MapComponent implements OnInit, OnDestroy {
             if (!this.robotService.areAttributesEqual(player.robots[existingRobotIndex], robot)) {
               Object.assign(player.robots[existingRobotIndex], robot);
             }
-          } else {
+          } else {            
             player.robots.push(robot);
           }
         }
