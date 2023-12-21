@@ -13,12 +13,5 @@ export class SidebarComponent {
     @Input() players : Player[];
     @Input() fetching : boolean;
     info = 'No Highlight'
-
-    constructor(private playerService: PlayerService) {}
-
-    ngOnInit() {
-        this.playerService.getPlayers().subscribe(players => {
-            this.players = players;
-        });
-    }
+        
 }

@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { Robot } from '../robot/robot.component';
 import { RobotsService } from '../../robot.service'
+import { interval, timer } from 'rxjs';
 
 export type Player = {
   playerId: string,

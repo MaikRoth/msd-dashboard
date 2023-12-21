@@ -40,6 +40,8 @@ type AchievementsResponse = {
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
+  
+  private players: Player[] | null = null;
 
   constructor(
     private http: HttpClient) { }
@@ -49,6 +51,7 @@ export class PlayerService {
   getPlayers(): Observable<Player[]> {
     const storedPlayers = this.loadPlayersFromLocalStorage();
     if (storedPlayers) {
+      this.players = storedPlayers;
       return of(storedPlayers);
     }
     return this.http.get<any[]>('http://localhost:8080/games').pipe(
@@ -70,6 +73,7 @@ export class PlayerService {
       }),
       switchMap(playerObservable => playerObservable),
       map(players => {
+        this.players = players; 
         this.savePlayersToLocalStorage(players);
         return players;
       })
@@ -94,5 +98,9 @@ export class PlayerService {
       console.error('Error loading players from localStorage', e);
     }
     return null;
+  }
+
+  getCachedPlayers(): Player[] | null {
+    return this.players;
   }
 }

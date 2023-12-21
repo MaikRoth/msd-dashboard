@@ -12,6 +12,7 @@ import { loadGamesFromLocalStorage, saveGamesToLocalStorage } from '../app.compo
 import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 import { Store } from '@ngrx/store';
 import { SharedService } from '../shared/shared.service';
+import { MoneyService } from '../money.service';
 
 @Component({
   selector: 'app-map',
@@ -37,6 +38,7 @@ export class MapComponent implements OnInit, OnDestroy {
   private gamesSubscription: Subscription;
   private playerSubscription: Subscription;
   constructor(
+    private moneyService: MoneyService,
     private sharedService: SharedService,
     private mapService: MapService,
     private robotService: RobotsService,
@@ -51,12 +53,16 @@ export class MapComponent implements OnInit, OnDestroy {
     this.robotSubscription = interval(this.intervalTime).subscribe(() => this.onGetRobots());
     this.onGetPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
-    document.addEventListener('DOMContentLoaded', () => {    
+    document.addEventListener('DOMContentLoaded', () => {
       this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
-        document.getElementById('map-container').style.backgroundColor = color;
+        const mapContainer = document.getElementById('map-container');
+        if (mapContainer) { 
+          mapContainer.style.backgroundColor = color;
+        }
       });
     });
   }
+
   handleMouseMove(event: MouseEvent, imageId: string) {
     const img = document.getElementById(imageId) as HTMLImageElement;
 
@@ -78,9 +84,11 @@ export class MapComponent implements OnInit, OnDestroy {
     const img = document.getElementById(imageId) as HTMLImageElement;
     img.style.transform = 'none';
   }
+
   private getPosition(planet: Planet): { x: number; y: number } {
     return planet.position || { x: 0, y: 0 };
   }
+
   onGetRobots() {
     this.oldRobots = this.robots;
     this.robots = this.robotService.getRobots();
@@ -128,6 +136,7 @@ export class MapComponent implements OnInit, OnDestroy {
     for (const item in prices) {
       const soldAmount = oldCargo[item] - newCargo[item];
       if (soldAmount > 0) {
+        console.log("Robot sold: ", item," ",soldAmount,"x");
         earnings += soldAmount * prices[item];
       }
     }
@@ -136,11 +145,26 @@ export class MapComponent implements OnInit, OnDestroy {
 
   calculateSpentOnUpgrades(oldLevels, newLevels) {
     const upgradeCosts = [0, 50, 300, 1500, 4000, 15000];
-    if (newLevels.miningLevel > oldLevels.miningLevel) {
-      return upgradeCosts[newLevels.miningLevel];
-    }
-    return 0;
-  }
+    let totalCost = 0;
+
+    const calculateCostForLevel = (oldLevel, newLevel) => {
+        let cost = 0;
+        for (let level = oldLevel + 1; level <= newLevel; level++) {
+            cost += upgradeCosts[level] || 0;
+        }
+        return cost;
+    };
+
+    totalCost += calculateCostForLevel(oldLevels.miningLevel, newLevels.miningLevel);
+    totalCost += calculateCostForLevel(oldLevels.storage, newLevels.storage);
+    totalCost += calculateCostForLevel(oldLevels.miningSpeed, newLevels.miningSpeed);
+    totalCost += calculateCostForLevel(oldLevels.damage, newLevels.damage);
+    totalCost += calculateCostForLevel(oldLevels.energyRegeneration, newLevels.energyRegeneration);
+    totalCost += calculateCostForLevel(oldLevels.health, newLevels.health);
+    totalCost += calculateCostForLevel(oldLevels.energy, newLevels.energy);
+
+    return totalCost;
+}
 
   getOldRobotById(oldRobots, robotId) {
     return oldRobots.find(oldRobot => oldRobot.robotId === robotId) || null;
@@ -159,11 +183,14 @@ export class MapComponent implements OnInit, OnDestroy {
         const player = players.find(player => player.playerId === newRobot.playerId);
         if (player) {
           player.money += netBalance;
+          console.log(player.name," bought sold Cargo! New Balance: ",player.money );
         }
       } else if (this.isNewRobot(oldRobots, newRobot)) {
         const player = players.find(player => player.playerId === newRobot.playerId);
         if (player) {
           player.money -= 100;
+          console.log(player.name," bought a Robot! New Balance: ",player.money );
+          
         }
       }
     });
@@ -209,8 +236,8 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         }
       });
-
     });
+
     this.updatePlayerBalances(this.players, this.oldRobots, this.robots)
   }
 
