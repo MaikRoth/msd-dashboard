@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Robot } from '../robot/robot.component';
 import { RobotsService } from '../../robot.service'
 import { Subscription, interval, timer } from 'rxjs';
@@ -17,11 +17,13 @@ export type Player = {
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnInit, OnDestroy {
+export class PlayerComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input() player: Player;
   @Input() tag: string;
+  @ViewChild('tableContainer') private tableContainer: ElementRef;
 
   private playerSubscription : Subscription;
+  private transactionAddedSubscription: Subscription;
 
   showTransactionHistory = false;
   clickedCells: {[entity: string]: boolean} = {}; 
@@ -45,14 +47,26 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.player.robots.filter(robot => 
       robot.name.toLowerCase().includes(this.robotSearchTerm.toLowerCase()));
   }
-  
+
   constructor(
     private robotService: RobotsService, 
     private moneyService: MoneyService, 
     private playerService: PlayerService) {
-
+      this.transactionAddedSubscription = this.playerService.transactionAdded.subscribe(() => {
+        this.scrollToBottom();
+      });
   }
 
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.tableContainer.nativeElement.scrollTop = this.tableContainer.nativeElement.scrollHeight;
+    } catch(err) { }
+  }
   handleClickedCell(entity: string) {
     if (entity && entity !== 'Admin') {
       if (this.clickedCells[entity]){
@@ -97,5 +111,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.playerSubscription.unsubscribe();
+    this.transactionAddedSubscription.unsubscribe();
   }
 }

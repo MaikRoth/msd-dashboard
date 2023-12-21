@@ -6,7 +6,7 @@
       style="background-color: aquamarine;">Transactions</button>
     <div *ngIf="showTransactionHistory">
       <input type="text" [(ngModel)]="searchTerm" class="form-control mb-2" placeholder="Search for Entity">
-      <div class="table-container mt-2">
+      <div #tableContainer class="table-container mt-2">
         <table class="table table-hover table-bordered">
           <thead class="thead-dark">
             <tr>
@@ -44,7 +44,7 @@
       <div class="row">
         <div class="col">
           <button class="btn btn-primary" (click)="toggleHighlightRobots()">
-            <span [innerHTML]="highlightRobots ? '<strong>Highlight</strong>' : 'Highlight'"></span>
+            <span [innerHTML]="highlightRobots ? '<strong><u></u>Highlight All</u></strong>' : 'Highlight All'"></span>
           </button>
         </div>
         <div class="col">

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { ElementRef, EventEmitter, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Player } from './map/player/player.component';
 import { switchMap, of, Observable, map, forkJoin } from "rxjs";
@@ -16,6 +16,7 @@ export type TransactionEntry = {
 export class PlayerService {
 
   private transactionHistory = new Map<string, TransactionEntry[]>();
+  transactionAdded = new EventEmitter<void>();
 
   constructor(
     private http: HttpClient,
@@ -28,7 +29,7 @@ export class PlayerService {
     history.push(entry);
     this.transactionHistory.set(playerId, history);
     this.saveTransactionHistoryToLocalStorage();
-
+    this.transactionAdded.emit();
   }
   clearTransactionHistory(): void {
     this.transactionHistory.clear();

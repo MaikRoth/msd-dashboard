@@ -141,7 +141,6 @@ export class MapComponent implements OnInit, OnDestroy {
           this.players = players;
         },
         error: (err) => {
-          console.log(err);
         }
       });
   }
@@ -268,9 +267,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     for (let planet of this.planets) {
       const position = this.getPosition(planet);
-      this.grid[position.x][position.y] = planet;
-      console.log("Planet X:",planet.position.x, "Planet Y");
-      
+      this.grid[position.x][position.y] = planet;      
     }
   }
 

@@ -10,7 +10,6 @@ export class MoneyService {
 
     setMoney(playerId: string, amount: number): void {
         this.moneyMap.set(playerId, amount);
-        console.log(this.moneyMap);
     }
 
     getMoney(playerId: string): number {
