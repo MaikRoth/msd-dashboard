@@ -21,21 +21,37 @@ export class PlayerComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() tag: string;
 
-  transactions: TransactionEntry[] = []
+  private playerSubscription : Subscription;
+
   showTransactionHistory = false;
   clickedCells: {[entity: string]: boolean} = {}; 
-
-  private playerSubscription : Subscription;
   showRobots = false;
   highlightRobots = false;
+  searchTerm: string = ''; 
+  transactions: TransactionEntry[] = []
+  get filteredTransactions(): TransactionEntry[] {
+    if (!this.searchTerm) {
+      return this.transactions; 
+    }
+    return this.transactions.filter(transaction => 
+      transaction.entity.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  }
 
+  robotSearchTerm: string = '';
+  get filteredRobots(): Robot[] {
+    if (!this.robotSearchTerm) {
+      return this.player.robots;
+    }
+    return this.player.robots.filter(robot => 
+      robot.name.toLowerCase().includes(this.robotSearchTerm.toLowerCase()));
+  }
+  
   constructor(
     private robotService: RobotsService, 
     private moneyService: MoneyService, 
     private playerService: PlayerService) {
 
   }
-
 
   handleClickedCell(entity: string) {
     if (entity && entity !== 'Admin') {

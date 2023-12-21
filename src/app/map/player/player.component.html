@@ -2,22 +2,23 @@
   <li class="list-group-item list-group-item-primary" (click)="copyToClipboard(player.playerId)">{{ player.name }}</li>
   <li class="list-group-item">
     Money: {{ player.money }}
-    <button class="btn btn-link" (click)="toggleTransactionHistory()"
+    <button class="btn btn-link mb-2" (click)="toggleTransactionHistory()"
       style="background-color: aquamarine;">Transactions</button>
     <div *ngIf="showTransactionHistory">
+      <input type="text" [(ngModel)]="searchTerm" class="form-control mb-2" placeholder="Search for Entity">
       <div class="table-container mt-2">
         <table class="table table-hover table-bordered">
           <thead class="thead-dark">
             <tr>
-              <th>Type</th>
-              <th>Entity</th>
-              <th>Item</th>
-              <th>Amount</th>
-              <th>Earning</th>
+              <th class="sticky-header">Type</th>
+              <th class="sticky-header">Entity</th>
+              <th class="sticky-header">Item</th>
+              <th class="sticky-header">Amount</th>
+              <th class="sticky-header">Earning</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let transaction of transactions" [ngClass]="{
+            <tr *ngFor="let transaction of filteredTransactions" [ngClass]="{
                   'table-success': transaction.earning > 0,
                   'table-danger': transaction.earning < 0
                 }">
@@ -57,7 +58,9 @@
     </div>
 
     <div *ngIf="showRobots" style="margin-top: 3px; max-height: 700px; overflow: auto;">
-      <app-robot *ngFor="let robo of player.robots" [robot]="robo" [infoToShow]="tag"></app-robot>
+      <input type="text" [(ngModel)]="robotSearchTerm" class="form-control" placeholder="Search Robots">
+
+      <app-robot *ngFor="let robo of filteredRobots" [robot]="robo" [infoToShow]="tag"></app-robot>
     </div>
     <div *ngIf="player.robots.length < 1" style="color: red">No Robots</div>
   </li>

@@ -219,21 +219,23 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private updatePlanets() {
-    this.planets.forEach(planet => planet.highlighted = false);
+    this.planets.forEach(planet => {
+      planet.highlighted = false;
+      planet.robots = [];
+    });
 
     for (const robot of this.robots) {
       const targetPlanet = this.planets.find(planet => planet.planetId === robot.planetId);
+      
       if (targetPlanet) {
-        const robotIndex = targetPlanet.robots.findIndex(existingRobot => existingRobot.robotId === robot.robotId);
-        if (robotIndex === -1) {
-          targetPlanet.robots.push(robot);
-        }
+        targetPlanet.robots.push(robot);
+
         if (robot.highlighted) {
           targetPlanet.highlighted = true;
         }
       }
     }
-  }
+}
   private updatePlayers() {
     this.players.forEach(player => {
       this.robots.forEach(robot => {
@@ -266,7 +268,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
     for (let planet of this.planets) {
       const position = this.getPosition(planet);
-      this.grid[position.y][position.x] = planet;
+      this.grid[position.x][position.y] = planet;
+      console.log("Planet X:",planet.position.x, "Planet Y");
+      
     }
   }
 
