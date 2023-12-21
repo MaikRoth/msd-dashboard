@@ -28,7 +28,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     const money = localStorage.getItem(`[Money] ${this.player.playerId}`)
     if(money){
       this.player.money = +money
-    }
+    }    
   }
 
   toggleInspectRobots() {
