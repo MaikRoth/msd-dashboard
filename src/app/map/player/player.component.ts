@@ -30,7 +30,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.player.money = +money
     }    
   }
-
+  async copyToClipboard(value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  }
   toggleInspectRobots() {
     this.showRobots = !this.showRobots;
   }

@@ -1,5 +1,5 @@
 <ul class="list-group mt-3">
-  <li class="list-group-item list-group-item-primary">{{ player.name }}</li>
+  <li class="list-group-item list-group-item-primary" (click)="copyToClipboard(player.playerId)">{{ player.name }}</li>
   <li class="list-group-item">Money: {{ player.money }}</li>
   <li class="list-group-item">
     <div class="container" *ngIf="player.robots.length > 0">
