@@ -4,7 +4,7 @@ import { Subscription, interval } from 'rxjs';
 import { GamesService } from '../games.service';
 import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 
-type ScoreboardWithAchievemnts = {
+type ScoreboardWithAchievements = {
   gameId: string,
   gameStatus: string,
   roundNumber: number,
@@ -27,7 +27,7 @@ type ScoreboardWithAchievemnts = {
 export class ScoreboardComponent implements OnInit, OnDestroy {
 
   game: Game;
-  scoreboard: ScoreboardWithAchievemnts;
+  scoreboard: ScoreboardWithAchievements;
   private scoreboardSubscription: Subscription;
   private gameSubscription: Subscription;
   rounds: number;
@@ -35,30 +35,24 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   constructor(private gameLogService: GamelogService, private gamesService: GamesService) { }
 
   ngOnInit() {
-   
+    this.loadFromLocalStorage();
     this.scoreboardSubscription = interval(1000).subscribe(() => {
-      this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievemnts) => {
+      this.gameLogService.getScoreboardWithAchievements().subscribe((res: ScoreboardWithAchievements) => {
         this.scoreboard = res;
-        this.scoreboard.scoreboardEntriesWithAchievements = this.scoreboard.scoreboardEntriesWithAchievements.sort((a, b) => {
-          if (a.totalScore < b.totalScore) {
-            return 1;
-          }
-          if (a.totalScore > b.totalScore) {
-            return -1
-          }
-          return 0
-        })
-      })
-    })
+        this.sortScoreboard();
+        localStorage.setItem('scoreboard', JSON.stringify(this.scoreboard));
+      });
+    });
+
     this.gameSubscription = interval(1000).subscribe(() => {
-      this.gamesService.getRecentGame()
-        .subscribe((res: Game[]) => {
-          if (res.length > 0) {
-            this.rounds = res[0].maxRounds
-            this.game = res[0];
-            this.fetching = false;
-          }
-        })
+      this.gamesService.getRecentGame().subscribe((res: Game[]) => {
+        if (res.length > 0) {
+          this.rounds = res[0].maxRounds;
+          this.game = res[0];
+          this.fetching = false;
+          localStorage.setItem('game', JSON.stringify(this.game));
+        }
+      });
     });
     const container = document.getElementById('errorContainer');
     if (container){
@@ -70,6 +64,25 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
       this.fetching = false;
     }, 10000);
   
+  }
+
+  loadFromLocalStorage() {
+    const savedScoreboard = localStorage.getItem('scoreboard');
+    const savedGame = localStorage.getItem('game');
+    if (savedScoreboard) {
+      this.scoreboard = JSON.parse(savedScoreboard);
+      this.sortScoreboard();
+    }
+    if (savedGame) {
+      this.game = JSON.parse(savedGame);
+      this.rounds = this.game.maxRounds;
+      this.fetching = false;
+    }
+  }
+  sortScoreboard() {
+    this.scoreboard.scoreboardEntriesWithAchievements = this.scoreboard.scoreboardEntriesWithAchievements.sort((a, b) => {
+      return b.totalScore - a.totalScore;
+    });
   }
   handleMouseMove(e) {
     const errorContent = document.getElementById('errorContent');
@@ -92,5 +105,6 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.scoreboardSubscription.unsubscribe();
     this.gameSubscription.unsubscribe();
+    
   }
 }

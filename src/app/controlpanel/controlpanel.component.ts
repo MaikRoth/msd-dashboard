@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GamesService } from '../games.service';
 import { Store } from '@ngrx/store';
 import { addCustomGame } from '../store/dashboard.actions';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 
 export type CustomGame = {
   players: number,
@@ -21,8 +21,6 @@ export class ControlpanelComponent implements OnInit {
   rounds: number = 50;
   duration: number = 15000;
   customGames$: Observable<{customGames:CustomGame[]}>;
-  gameCreationErrorText: string;
-  status: string;
   shouldShake: boolean = false;
 
 
@@ -38,23 +36,26 @@ export class ControlpanelComponent implements OnInit {
     this.gamesService.createCustom(this.players, this.rounds, this.duration).subscribe(() => { });
   }
   onCreateCustomGame() {
-    this.checkForDuplicates(this.players, this.rounds, this.duration).subscribe(isDuplicate => {
-      if (isDuplicate) {
-        this.triggerShake();
-      } else {
-        this.store.dispatch(addCustomGame({ players: this.players, rounds: this.rounds, duration: this.duration }));
-        this.onSelectCustomGame();
-      }
-    });
+    const isDuplicate = this.checkForDuplicates(this.players, this.rounds, this.duration);
+    if (isDuplicate) {
+      this.triggerShake();
+    } else {
+      this.store.dispatch(addCustomGame({ players: this.players, rounds: this.rounds, duration: this.duration }));
+      this.onSelectCustomGame();
+    }
   }
   triggerShake() {
     this.shouldShake = true;
     setTimeout(() => this.shouldShake = false, 820);
   }
-  checkForDuplicates(pla: number, rou: number, dur: number): Observable<boolean> {
-    return this.customGames$.pipe(
-      map(games => games.customGames.some(game => game.players === pla && game.rounds === rou && game.duration === dur))
-    );
+  checkForDuplicates(pla: number, rou: number, dur: number): boolean {
+    let duplicate = false;
+    this.store.select('customGames').pipe(take(1)).subscribe(customGamesState => {
+      duplicate = customGamesState.customGames.some(game => 
+        game.players === pla && game.rounds === rou && game.duration === dur
+      );
+    });
+    return duplicate;
   }
 
 }

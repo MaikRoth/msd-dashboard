@@ -1,68 +1,61 @@
 import { Injectable } from "@angular/core";
-import { GamesService } from "./games.service";
 import { HttpClient } from "@angular/common/http";
 import { Player } from './map/player/player.component';
-import { switchMap, of, catchError, Subject, Observable, map } from "rxjs";
+import { switchMap, of, Observable, map } from "rxjs";
+import { MoneyService } from "./money.service";
+import { Robot } from "./map/robot/robot.component";
 
-type Entrie = {
-    player: {
-        id: string,
-        name: string
-    },
-    gameId: string,
-    achievements: {
-        name: string,
-        image: string,
-        category: string
-    }
-}
-type Scoreboard = {
-    gameId: string,
-    gameStatus: string,
-    roundNumber: number,
-    scoreboardEntries: ScoreboardEntries[]
-}
-type ScoreboardEntries = {
-    player: {
-        id : string,
-        name: string,
-    },
-    totalScore: number,
-    fightingScore: number,
-    miningScore: number,
-    tradingScore:number,
-    travelingScore:number
-}
-type AchievementsResponse = {
-    gameId: string,
-    playerAchievements: Entrie[]
-}
-
+export type TransactionEntry = {
+  type: 'BUY' | 'SELL' | 'INIT',
+  entity: string,
+  item: string,
+  amount: number
+  earning: number
+};
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
 
-    constructor(
-        private http: HttpClient) { }
+  private transactionHistory = new Map<string, TransactionEntry[]>();
 
-    getPlayers(): Observable<Player[]> {
-        return this.http.get<any[]>('http://localhost:8080/games').pipe(
-          map(games => games.flatMap(game => game.participatingPlayers)),
-          map(playerNames => {
-            return this.http.get<{ scoreboardEntries: any[] }>('http://localhost:8089/scoreboard').pipe(
-              map(scoreboard => {
-                return playerNames.map(name => {
-                  const playerScoreboard = scoreboard.scoreboardEntries.find(entry => entry.player.name === name);
-                  return {
-                    playerId: playerScoreboard?.player.id,
-                    name: name,
-                    robots: [],
-                    money: 500
-                  };
-                });
-              })
-            );
-          }),
-          switchMap(playerObservable => playerObservable)
+  constructor(
+    private http: HttpClient,
+    private moneyService: MoneyService) { }
+
+  addTransaction(playerId: string, entry: TransactionEntry): void {
+    const history = this.transactionHistory.get(playerId) || [];
+    history.push(entry);
+    this.transactionHistory.set(playerId, history);
+  }
+
+  getTransactionHistory(playerId: string): TransactionEntry[] {
+    return this.transactionHistory.get(playerId) || [];
+  }
+  getPlayers(): Observable<Player[]> {
+    return this.http.get<any[]>('http://localhost:8080/games').pipe(
+      map(games => games.flatMap(game => game.participatingPlayers)),
+      map(playerNames => {
+        return this.http.get<{ scoreboardEntries: any[] }>('http://localhost:8089/scoreboard').pipe(
+          map(scoreboard => {
+            return playerNames.map(name => {
+              const playerScoreboard = scoreboard.scoreboardEntries.find(entry => entry.player.name === name);
+              const newPlayer: Player = {
+                playerId: playerScoreboard?.player.id,
+                name: name,
+                robots: [],
+                money: 0
+              };
+              this.moneyService.addMoney(newPlayer.playerId, 500);
+              this.addTransaction(newPlayer.playerId, 
+                {type: 'INIT', entity: "Admin", item: 'money', amount: 1, earning: 500})
+              return newPlayer;
+            });
+          })
         );
-      }
+      }),
+      switchMap(playerObservable => playerObservable),
+      map(players => {
+        return players;
+      })
+    );
+  }
 }

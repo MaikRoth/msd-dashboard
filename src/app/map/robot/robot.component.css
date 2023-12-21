@@ -1,89 +1,104 @@
 .progress {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-  }
-  .spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 2s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  .progress-bar {
-    height: 20px;
-    border-radius: 5px;
-    text-align: center; 
-    line-height: -4px;
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+.cargoimage{
+  width: 32px;
+  height: auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
 
-  .button-row {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
+  100% {
+    transform: rotate(360deg);
   }
- 
-  .text-button {
-    color: blue;
-    cursor: pointer;
-    text-decoration: none;
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    display: inline; 
-  }
-  
-  .text-button:hover {
-    color: darkblue;
-    text-decoration: underline;
-  }
-  .cargo-container {
-    display: flex;
-    justify-content: space-around; 
-  }
-  
-  .cargo-item {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    margin-right: 2px;
-  }
-  
-  .cargo-item img {
-    margin-bottom: 5px;
-  }
-  .cargo-display {
-    display: flex;
-    align-items: center; 
-  }
-  
-  
-  .cargo-capacity {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-  }
-  
-  .slash {
-    margin-right: 5px; 
-    font-size: 30px; 
-  }
-  .progress-container {
-    display: flex;
-    align-items: center;
-  }
-  .vital-icon {
-    margin-right: 10px; 
-  }
-  
-  .progress {
-    width: 100%;
-  }
+}
 
-  
+.progress-bar {
+  height: 20px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: -4px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.text-button {
+  color: blue;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+
+.text-button:hover {
+  color: darkblue;
+  text-decoration: underline;
+}
+
+.cargo-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.cargo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 2px;
+}
+
+.cargo-item img {
+  margin-bottom: 5px;
+}
+
+.cargo-display {
+  display: flex;
+  align-items: center;
+}
+
+
+.cargo-capacity {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.slash {
+  margin-right: 5px;
+  font-size: 30px;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+}
+
+.vital-icon {
+  margin-right: 10px;
+}
+
+.progress {
+  width: 100%;
+}

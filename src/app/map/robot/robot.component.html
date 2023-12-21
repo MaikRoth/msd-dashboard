@@ -6,7 +6,7 @@
         {{ robot.name }}
         <div class="spinner" *ngIf="isLoading"></div>
         <img [src]="robot.img" style="width:50px;" (load)="isLoading = false">
-        <img *ngIf="infoToShow === 'Cargo'" style="margin-left: 15px;"
+        <img *ngIf="infoToShow === 'Cargo'" style="margin-left: 15px;" class="materialCargoImg"
           [src]="getMaterialImage(getMostMaterial(robot.cargo))" alt="" />
       </button>
     </h2>
@@ -55,23 +55,23 @@
         <div class="cargo-display">
           <div class="cargo-container">
             <div class="cargo-item" *ngIf="robot.cargo.coal > 0">
-              <img [src]="getMaterialImage('coal')" alt="Coal" />
+              <img title="Coal" [src]="getMaterialImage('coal')" alt="Coal" class="cargoimage"/>
               <span>{{ robot.cargo.coal }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.iron > 0">
-              <img [src]="getMaterialImage('iron')" alt="Iron" />
+              <img title="Iron" [src]="getMaterialImage('iron')" alt="Iron" class="cargoimage"/>
               <span>{{ robot.cargo.iron }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.gem > 0">
-              <img [src]="getMaterialImage('gem')" alt="Gem" />
+              <img title="Gem" [src]="getMaterialImage('gem')" alt="Gem" class="cargoimage"/>
               <span>{{ robot.cargo.gem }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.gold > 0">
-              <img [src]="getMaterialImage('gold')" alt="Gold" />
+              <img title="Gold" [src]="getMaterialImage('gold')" alt="Gold" class="cargoimage"/>
               <span>{{ robot.cargo.gold }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.platin > 0">
-              <img [src]="getMaterialImage('platin')" alt="Platin" />
+              <img title="Platin" [src]="getMaterialImage('platin')" alt="Platin" class="cargoimage" />
               <span>{{ robot.cargo.platin }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.used === 0">
