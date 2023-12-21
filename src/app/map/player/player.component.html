@@ -1,6 +1,36 @@
 <ul class="list-group mt-3">
   <li class="list-group-item list-group-item-primary" (click)="copyToClipboard(player.playerId)">{{ player.name }}</li>
-  <li class="list-group-item">Money: {{ player.money }}</li>
+  <li class="list-group-item"> 
+    Money: {{ player.money }}
+    <button class="btn btn-link" (click)="toggleTransactionHistory()" style="background-color: aquamarine;">Transactions</button>
+    <div *ngIf="showTransactionHistory">
+      <div class="table-container mt-2">
+        <table class="table table-hover table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>Type</th>
+              <th>Entity</th>
+              <th>Item</th>
+              <th>Amount</th>
+              <th>Earning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transaction of transactions" [ngClass]="{
+                  'table-success': transaction.earning > 0,
+                  'table-danger': transaction.earning < 0
+                }">
+              <td>{{ transaction.type }}</td>
+              <td>{{ transaction.entity }}</td>
+              <td>{{ transaction.item }}</td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.earning }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </div></li>
   <li class="list-group-item">
     <div class="container" *ngIf="player.robots.length > 0">
         Robots:

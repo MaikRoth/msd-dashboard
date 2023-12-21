@@ -11,7 +11,17 @@
     background-color: #e2e6ea;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+.table-container {
+    max-height: 400px;
+    overflow-y: auto; 
+  }
+.positive-row {
+    background-color: lightgreen;
+  }
+  
+.negative-row {
+    background-color: lightcoral;
+}
 .list-group-item-primary {
     background-color: #cce5ff;
     color: #004085;

@@ -56,7 +56,7 @@ export class MapComponent implements OnInit, OnDestroy {
     document.addEventListener('DOMContentLoaded', () => {
       this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
         const mapContainer = document.getElementById('map-container');
-        if (mapContainer) { 
+        if (mapContainer) {
           mapContainer.style.backgroundColor = color;
         }
       });
@@ -130,73 +130,67 @@ export class MapComponent implements OnInit, OnDestroy {
   redirectToControlpanel() {
     this.router.navigate(['/controlpanel']);
   }
-  calculateEarningsFromCargoChange(oldCargo, newCargo) {
+  calculateEarningsFromCargoChange(playerId, oldRobot, newRobot) {
+    const oldCargo = oldRobot.cargo;
+    const newCargo = newRobot.cargo;
     let earnings = 0;
     const prices = { coal: 5, iron: 15, gem: 30, gold: 50, platin: 60 };
     for (const item in prices) {
       const soldAmount = oldCargo[item] - newCargo[item];
       if (soldAmount > 0) {
-        console.log("Robot sold: ", item," ",soldAmount,"x");
+        this.playerService.addTransaction(playerId, { type: 'SELL', entity: oldRobot.name, item: item, amount: soldAmount, earning: soldAmount * prices[item] })
         earnings += soldAmount * prices[item];
       }
     }
-    return earnings;
+    this.moneyService.addMoney(playerId, earnings);
   }
 
-  calculateSpentOnUpgrades(oldLevels, newLevels) {
+  calculateSpentOnUpgrades(robot, playerId, oldLevels, newLevels) {
     const upgradeCosts = [0, 50, 300, 1500, 4000, 15000];
     let totalCost = 0;
 
-    const calculateCostForLevel = (oldLevel, newLevel) => {
-        let cost = 0;
-        for (let level = oldLevel + 1; level <= newLevel; level++) {
-            cost += upgradeCosts[level] || 0;
+    const calculateCostForLevel = (oldLevel, newLevel, levelName) => {
+      let cost = 0;
+      for (let level = oldLevel + 1; level <= newLevel; level++) {
+        cost += upgradeCosts[level] || 0;
+        if (cost !== 0) {
+          this.playerService.addTransaction(playerId, { type: 'BUY', entity: robot.name, item: levelName, amount: newLevel, earning: -upgradeCosts[level] })
         }
-        return cost;
+      }
+      return cost;
     };
 
-    totalCost += calculateCostForLevel(oldLevels.miningLevel, newLevels.miningLevel);
-    totalCost += calculateCostForLevel(oldLevels.storage, newLevels.storage);
-    totalCost += calculateCostForLevel(oldLevels.miningSpeed, newLevels.miningSpeed);
-    totalCost += calculateCostForLevel(oldLevels.damage, newLevels.damage);
-    totalCost += calculateCostForLevel(oldLevels.energyRegeneration, newLevels.energyRegeneration);
-    totalCost += calculateCostForLevel(oldLevels.health, newLevels.health);
-    totalCost += calculateCostForLevel(oldLevels.energy, newLevels.energy);
-
-    return totalCost;
-}
+    totalCost += calculateCostForLevel(oldLevels.miningLevel, newLevels.miningLevel, 'miningLevel');
+    totalCost += calculateCostForLevel(oldLevels.storage, newLevels.storage, 'storage');
+    totalCost += calculateCostForLevel(oldLevels.miningSpeed, newLevels.miningSpeed, 'miningSpeed');
+    totalCost += calculateCostForLevel(oldLevels.damage, newLevels.damage, 'damage');
+    totalCost += calculateCostForLevel(oldLevels.energyRegeneration, newLevels.energyRegeneration, 'energyRegeneration');
+    totalCost += calculateCostForLevel(oldLevels.health, newLevels.health, 'health');
+    totalCost += calculateCostForLevel(oldLevels.energy, newLevels.energy, 'energy');
+    this.moneyService.subtractMoney(playerId, totalCost)
+  }
 
   getOldRobotById(oldRobots, robotId) {
     return oldRobots.find(oldRobot => oldRobot.robotId === robotId) || null;
   }
-  isNewRobot(oldRobots, newRobot) {
-    return !oldRobots.some(oldRobot => oldRobot.robotId === newRobot.robotId);
-  }
-  updatePlayerBalances(players, oldRobots, newRobots) {
+
+  updatePlayerBalances(oldRobots, newRobots) {
     newRobots.forEach(newRobot => {
       const oldRobot = this.getOldRobotById(oldRobots, newRobot.robotId);
+      const playerId = newRobot.playerId;
       if (oldRobot) {
-        const earningsFromCargo = this.calculateEarningsFromCargoChange(oldRobot.cargo, newRobot.cargo);
-        const spentOnUpgrades = this.calculateSpentOnUpgrades(oldRobot.levels, newRobot.levels);
-        const netBalance = earningsFromCargo - spentOnUpgrades;
-
-        const player = players.find(player => player.playerId === newRobot.playerId);
-        if (player) {
-          player.money += netBalance;
-          console.log(player.name," bought sold Cargo! New Balance: ",player.money );
-        }
-      } else if (this.isNewRobot(oldRobots, newRobot)) {
-        const player = players.find(player => player.playerId === newRobot.playerId);
-        if (player) {
-          player.money -= 100;
-          console.log(player.name," bought a Robot! New Balance: ",player.money );
-          
-        }
+        this.calculateEarningsFromCargoChange(playerId, oldRobot, newRobot);
+        this.calculateSpentOnUpgrades(newRobot, playerId, oldRobot.levels, newRobot.levels);
+      } else {
+        this.moneyService.subtractMoney(playerId, 100)
+        this.playerService.addTransaction(playerId, { type: 'BUY', entity: "", item: "robot", amount: 1, earning: -100 })
       }
     });
   }
 
-
+  getPlayerById(id: string): Player {
+    return this.players.find(player => player.playerId === id)
+  }
   hasHighlightedRobot(planet: Planet): boolean {
     for (const robot of planet.robots) {
       if (robot.highlighted) {
@@ -231,23 +225,23 @@ export class MapComponent implements OnInit, OnDestroy {
             if (!this.robotService.areAttributesEqual(player.robots[existingRobotIndex], robot)) {
               Object.assign(player.robots[existingRobotIndex], robot);
             }
-          } else {            
+          } else {
             player.robots.push(robot);
           }
         }
       });
     });
 
-    this.updatePlayerBalances(this.players, this.oldRobots, this.robots)
+    this.updatePlayerBalances(this.oldRobots, this.robots)
   }
 
   private setupGrid() {
     let maxX = Math.max(...this.planets.map(p => this.getPosition(p).x));
     let maxY = Math.max(...this.planets.map(p => this.getPosition(p).y));
 
-    for (let i = 0; i <= maxY; i++) {
+    for (let i = 0; i <= maxX; i++) {
       this.grid[i] = [];
-      for (let j = 0; j <= maxX; j++) {
+      for (let j = 0; j <= maxY; j++) {
         this.grid[i][j] = null;
       }
     }
