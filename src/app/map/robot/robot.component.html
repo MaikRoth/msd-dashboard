@@ -6,8 +6,8 @@
         {{ robot.name }}
         <div class="spinner" *ngIf="isLoading"></div>
         <img [src]="robot.img" style="width:50px;" (load)="isLoading = false">
-        <img *ngIf="infoToShow === 'Cargo'" style="margin-left: 15px;" class="materialCargoImg"
-          [src]="getMaterialImage(getMostMaterial(robot.cargo))" alt="" />
+        <img *ngIf="infoToShow === 'Cargo'" style="margin-left: 15px;" class="cargoimage"
+          [src]="getMaterialImage(getMostMaterial(robot.cargo))" [title]="getMostMaterial(robot.cargo)" alt="" />
       </button>
     </h2>
     <div [ngClass]="{ 'accordion-collapse': true, collapse: isCollapsed }">
@@ -20,13 +20,13 @@
           <strong><u>IDs:</u></strong>
           <div class="button-row" style="margin-top: 3px; margin-bottom: 3px">
             <div class="text-button" (click)="copyToClipboard(robot.planetId)">
-              <img src="../../../assets/images/icons/planet.png" alt="planet" />
+              <img src="../../../assets/images/icons/planet.png" class="cargoimage" alt="planet" />
             </div>
             <div class="text-button" (click)="copyToClipboard(robot.playerId)">
-              <img src="../../../assets/images/icons/player.png" alt="player" />
+              <img src="../../../assets/images/icons/player.png" class="cargoimage" alt="player" />
             </div>
             <div class="text-button" (click)="copyToClipboard(robot.robotId)">
-              <img src="../../../assets/images/icons/robot.png" alt="robot" />
+              <img [src]="robot.img" class="cargoimage" alt="robot" />
             </div>
           </div>
         </div>

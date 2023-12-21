@@ -28,9 +28,7 @@ export class GameshandlerComponent implements OnInit, OnDestroy {
 
   }
   ngOnInit() {
-    const games = loadGamesFromLocalStorage()
-    console.log(games);
-    
+    const games = loadGamesFromLocalStorage()    
     if (games) {
       this.games = games
       this.fetching = false

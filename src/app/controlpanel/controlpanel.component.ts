@@ -3,6 +3,7 @@ import { GamesService } from '../games.service';
 import { Store } from '@ngrx/store';
 import { addCustomGame } from '../store/dashboard.actions';
 import { Observable, map, take } from 'rxjs';
+import { PlayerService } from '../player.service';
 
 export type CustomGame = {
   players: number,
@@ -26,14 +27,17 @@ export class ControlpanelComponent implements OnInit {
 
   constructor(
     private gamesService: GamesService, 
-    private store: Store<{customGames: {customGames:CustomGame[]}}>) { }
+    private store: Store<{customGames: {customGames:CustomGame[]}}>,
+    private playerService : PlayerService) { }
 
   ngOnInit() {
     this.customGames$ = this.store.select('customGames')
   }
 
   onSelectCustomGame() {
-    this.gamesService.createCustom(this.players, this.rounds, this.duration).subscribe(() => { });
+    this.playerService.clearTransactionHistory();
+    this.gamesService.createCustom(this.players, this.rounds, this.duration).subscribe(() => {
+       });
   }
   onCreateCustomGame() {
     const isDuplicate = this.checkForDuplicates(this.players, this.rounds, this.duration);

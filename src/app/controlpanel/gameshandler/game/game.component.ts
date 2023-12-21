@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { GamesService } from '../../../games.service';
 import { Router } from '@angular/router';
 import { Game } from '../gameshandler.component';
+import { MoneyService } from '../../../money.service';
+import { PlayerService } from '../../../player.service';
 
 @Component({
   selector: 'app-game',
@@ -17,7 +19,10 @@ export class GameComponent implements OnInit {
   
   collapsedStates: Map<string, boolean> = new Map();
 
-  constructor(private gamesService: GamesService, private router: Router) {}
+  constructor(
+    private gamesService: GamesService, 
+    private router: Router, 
+    private moneyService: MoneyService) {}
 
   ngOnInit() {
     this.initializeCollapsedState();
@@ -45,7 +50,8 @@ export class GameComponent implements OnInit {
 
   onStartGame(id: string) {
     this.gamesService.startGame(id).subscribe(() => {
-      this.redirectToMap()
+      this.redirectToMap();
+      this.moneyService.clear();
     })
   }
 
@@ -60,6 +66,7 @@ export class GameComponent implements OnInit {
   onEndGame(id: string) {
     this.gamesService.endGame(id).subscribe(() => {
       this.redirectToControlPanel()
+      this.moneyService.clear()
     })
   }
 }

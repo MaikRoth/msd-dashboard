@@ -20,11 +20,11 @@ export class RobotsService {
                 let newRobotsArray: Robot[] = [];
                 updatedRobots.forEach(newRobot => {
                     const existingRobot = this.robots.find(r => r.robotId === newRobot.robotId);
-    
+
                     if (existingRobot) {
                         newRobotsArray.push({ ...existingRobot, ...newRobot });
                     } else {
-                        const robotName = this.generateRobotName();                        
+                        const robotName = this.generateRobotName();
                         newRobotsArray.push({
                             ...newRobot,
                             name: robotName,
@@ -55,11 +55,20 @@ export class RobotsService {
     highlightRobot(robot: Robot) {
         this.highlightedRobots.push(robot);
     }
+    highlightRobotByName(name: string) {
+        const robotToHighlight = this.robots.find(robot => robot.name === name);
 
+        if (robotToHighlight && !this.highlightedRobots.includes(robotToHighlight)) {
+            this.highlightedRobots.push(robotToHighlight);
+        }
+    }
     resetHighlightRobot(robot: Robot) {
         this.highlightedRobots = this.highlightedRobots.filter(r => r.robotId !== robot.robotId);
     }
-
+    resetHighlightRobotByName(name: string) {
+        const robotToUnhighlight = this.robots.find(robot => robot.name === name);
+        this.highlightedRobots = this.highlightedRobots.filter(r => r.robotId !== robotToUnhighlight.robotId);
+    }
     highlightRobotsOfPlayer(playerId: string) {
         this.robots.forEach(robot => {
             if (robot.playerId == playerId) {

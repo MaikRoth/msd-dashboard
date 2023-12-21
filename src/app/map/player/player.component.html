@@ -1,8 +1,9 @@
 <ul class="list-group mt-3">
   <li class="list-group-item list-group-item-primary" (click)="copyToClipboard(player.playerId)">{{ player.name }}</li>
-  <li class="list-group-item"> 
+  <li class="list-group-item">
     Money: {{ player.money }}
-    <button class="btn btn-link" (click)="toggleTransactionHistory()" style="background-color: aquamarine;">Transactions</button>
+    <button class="btn btn-link" (click)="toggleTransactionHistory()"
+      style="background-color: aquamarine;">Transactions</button>
     <div *ngIf="showTransactionHistory">
       <div class="table-container mt-2">
         <table class="table table-hover table-bordered">
@@ -21,7 +22,11 @@
                   'table-danger': transaction.earning < 0
                 }">
               <td>{{ transaction.type }}</td>
-              <td>{{ transaction.entity }}</td>
+              <td (click)="handleClickedCell(transaction.entity)"
+                [class.clicked-entity]="clickedCells[transaction.entity]"
+                [class.clickable-entity]="transaction.entity && transaction.entity !== 'Admin'">
+                {{ transaction.entity }}
+              </td>
               <td>{{ transaction.item }}</td>
               <td>{{ transaction.amount }}</td>
               <td>{{ transaction.earning }}</td>
@@ -29,42 +34,30 @@
           </tbody>
         </table>
       </div>
-      
-    </div></li>
+
+    </div>
+  </li>
   <li class="list-group-item">
     <div class="container" *ngIf="player.robots.length > 0">
-        Robots:
+      Robots:
       <div class="row">
         <div class="col">
-          <button
-            class="btn btn-primary"
-            (click)="toggleHighlightRobots()"
-          >
-          <span [innerHTML]="highlightRobots ? '<strong>Highlight</strong>' : 'Highlight'"></span>
+          <button class="btn btn-primary" (click)="toggleHighlightRobots()">
+            <span [innerHTML]="highlightRobots ? '<strong>Highlight</strong>' : 'Highlight'"></span>
           </button>
         </div>
         <div class="col">
-          <button
-            class="btn btn-success"
-            (click)="showRobots = !showRobots"
-          >
+          <button class="btn btn-success" (click)="showRobots = !showRobots">
             Inspect ({{
-              player.robots.length
+            player.robots.length
             }})
           </button>
         </div>
       </div>
     </div>
 
-    <div
-      *ngIf="showRobots"
-      style="margin-top: 3px; max-height: 700px; overflow: auto;"
-    >
-      <app-robot 
-        *ngFor="let robo of player.robots"
-        [robot]="robo"
-        [infoToShow]="tag"
-      ></app-robot>
+    <div *ngIf="showRobots" style="margin-top: 3px; max-height: 700px; overflow: auto;">
+      <app-robot *ngFor="let robo of player.robots" [robot]="robo" [infoToShow]="tag"></app-robot>
     </div>
     <div *ngIf="player.robots.length < 1" style="color: red">No Robots</div>
   </li>

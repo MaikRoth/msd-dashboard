@@ -10,13 +10,11 @@ export class MoneyService {
 
     setMoney(playerId: string, amount: number): void {
         this.moneyMap.set(playerId, amount);
+        console.log(this.moneyMap);
     }
 
     getMoney(playerId: string): number {
-        if (this.moneyMap.get(playerId)){
-            return this.moneyMap.get(playerId);
-        } else return -1
-        
+        return this.moneyMap.get(playerId) ?? -1;
     }
 
     addMoney(playerId: string, amount: number): void {
@@ -24,7 +22,7 @@ export class MoneyService {
         this.moneyMap.set(playerId, currentAmount + amount);
     }
 
-    subtractMoney(playerId: string, amount: number): void {
+    subtractMoney(playerId: string, amount: number): void {        
         const currentAmount = this.moneyMap.get(playerId) || 0;
         if (currentAmount >= amount) {
             this.moneyMap.set(playerId, currentAmount - amount);
@@ -35,5 +33,9 @@ export class MoneyService {
 
     getAllMoney(): Map<string, number> {
         return this.moneyMap;
+    }
+
+    clear(){
+        this.moneyMap = new Map<string, number>();
     }
 }

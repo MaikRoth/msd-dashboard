@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MapService } from '../map.service';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, interval, switchMap, takeWhile } from 'rxjs';
 import { RobotsService } from '../robot.service';
 import { GamesService } from '../games.service';
 import { PlayerService } from '../player.service';
@@ -51,7 +51,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.games = loadGamesFromLocalStorage();
     this.planetSubscription = interval(this.intervalTime).subscribe(() => this.onGetPlanets());
     this.robotSubscription = interval(this.intervalTime).subscribe(() => this.onGetRobots());
-    this.onGetPlayers();
+    this.pollForPlayers();
     this.gamesSubscription = interval(this.intervalTime).subscribe(() => this.onGetGames());
     document.addEventListener('DOMContentLoaded', () => {
       this.backgroundSubscription = this.sharedService.backgroundColor.subscribe(color => {
@@ -122,10 +122,28 @@ export class MapComponent implements OnInit, OnDestroy {
       saveGamesToLocalStorage(this.games);
     })
   }
-  onGetPlayers() {
-    this.playerService.getPlayers().subscribe((players: Player[]) => {
-      this.players = players;
-    });
+
+  pollForPlayers() {
+    interval(1000)
+      .pipe(
+        switchMap(() => this.gamesService.getPlayingPlayers()),
+        switchMap((participatingPlayers: string[]) => {
+          if (this.players.length !== participatingPlayers.length) {
+            return this.playerService.getPlayers();
+          } else {
+            throw new Error('Polling completed');
+          }
+        }),
+        takeWhile(() => true, true)
+      )
+      .subscribe({
+        next: (players: Player[]) => {
+          this.players = players;
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
   }
   redirectToControlpanel() {
     this.router.navigate(['/controlpanel']);

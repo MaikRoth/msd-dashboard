@@ -23,6 +23,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   transactions: TransactionEntry[] = []
   showTransactionHistory = false;
+  clickedCells: {[entity: string]: boolean} = {}; 
 
   private playerSubscription : Subscription;
   showRobots = false;
@@ -35,11 +36,21 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   }
 
+
+  handleClickedCell(entity: string) {
+    if (entity && entity !== 'Admin') {
+      if (this.clickedCells[entity]){
+        this.robotService.resetHighlightRobotByName(entity)
+      } else {
+        this.robotService.highlightRobotByName(entity)
+      }
+      this.clickedCells[entity] = !this.clickedCells[entity];
+    }
+  }
   ngOnInit(): void {
     this.playerSubscription = interval(1000).subscribe(() => {
       this.player.money = this.moneyService.getMoney(this.player.playerId) 
       this.transactions = this.playerService.getTransactionHistory(this.player.playerId)
-      console.log(this.transactions);
       
     })
   }
