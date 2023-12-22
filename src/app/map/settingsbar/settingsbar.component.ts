@@ -10,7 +10,7 @@ export class SettingsbarComponent {
 
 
   constructor(private sharedService: SharedService) {}
-
+  scale = 1.0
   
   isCollapsed: boolean = true;
   showAchievements: boolean = false;
@@ -18,7 +18,10 @@ export class SettingsbarComponent {
   toggleDarkMode(){
     this.sharedService.toggleDarkMode()
   }
+  scaleMap(){
+    this.sharedService.setMapScale(this.scale);
 
+  }
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }

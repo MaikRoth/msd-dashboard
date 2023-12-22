@@ -22,14 +22,15 @@ import { MoneyService } from '../money.service';
 export class MapComponent implements OnInit, OnDestroy {
   planets: Planet[] = [];
   robots: Robot[] = [];
-  grid: (Planet | null)[][] = [];
+  
   players: Player[] = [];
   games: Game[]
-
+  grid: (Planet | null)[][] = [];
   private intervalTime = 5000;
   fetching = true;
   showPlanetInfo = true;
   errorUrl: string = "";
+  mapScale: number = 1.0;
 
   private oldRobots: Robot[];
   private backgroundSubscription: Subscription;
@@ -60,6 +61,10 @@ export class MapComponent implements OnInit, OnDestroy {
           mapContainer.style.backgroundColor = color;
         }
       });
+    });
+    this.sharedService.mapScale.subscribe(scale => {
+      console.log('New Scale:', scale);
+      this.mapScale = scale;
     });
   }
 
@@ -225,7 +230,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     for (const robot of this.robots) {
       const targetPlanet = this.planets.find(planet => planet.planetId === robot.planetId);
-      
+
       if (targetPlanet) {
         targetPlanet.robots.push(robot);
 
@@ -234,7 +239,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }
       }
     }
-}
+  }
   private updatePlayers() {
     this.players.forEach(player => {
       this.robots.forEach(robot => {
@@ -257,7 +262,7 @@ export class MapComponent implements OnInit, OnDestroy {
   private setupGrid() {
     let maxX = Math.max(...this.planets.map(p => this.getPosition(p).x));
     let maxY = Math.max(...this.planets.map(p => this.getPosition(p).y));
-
+    
     for (let i = 0; i <= maxX; i++) {
       this.grid[i] = [];
       for (let j = 0; j <= maxY; j++) {
@@ -267,7 +272,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     for (let planet of this.planets) {
       const position = this.getPosition(planet);
-      this.grid[position.x][position.y] = planet;      
+      this.grid[position.x][position.y] = planet;
     }
   }
 

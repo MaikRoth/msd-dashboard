@@ -7,10 +7,17 @@ export class SharedService {
     backgroundColor = this.backgroundColorSource.asObservable();
     private robotImageSizeSource = new BehaviorSubject<string>('small');
     robotImageSize = this.robotImageSizeSource.asObservable();
+    private mapScaleSource = new BehaviorSubject<number>(1); // Default scale 1
+    mapScale = this.mapScaleSource.asObservable();
 
     constructor() {
         this.loadTheme();
     }
+
+    setMapScale(scale: number) {
+        this.mapScaleSource.next(scale);
+    }
+    
     changeBackgroundColor(color: string) {
         this.backgroundColorSource.next(color);
     }

@@ -26,7 +26,7 @@ export class MoneyService {
         if (currentAmount >= amount) {
             this.moneyMap.set(playerId, currentAmount - amount);
         } else {
-            console.error(`Player ${playerId} does not have enough money.`);
+            this.moneyMap.set(playerId, 0);
         }
     }
 

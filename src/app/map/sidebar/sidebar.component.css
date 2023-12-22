@@ -1,7 +1,14 @@
 .highlight-options {
     margin-bottom: 20px;
 }
-
+.sidebar{
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
 .form-check {
     display: flex;
     align-items: center;
@@ -18,13 +25,6 @@
     cursor: pointer;
 }
 
-.players-display .container {
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
 .players-display .col {
     display: flex;
     flex-direction: column;
@@ -35,4 +35,10 @@
 h4 {
     color: #007bff;
     margin-bottom: 15px;
+}
+.sticky-sidebar {
+    position: sticky;
+    top: 0; 
+    height: 100vh;
+    overflow-y: auto; 
 }

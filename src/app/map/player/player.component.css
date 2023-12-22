@@ -1,20 +1,16 @@
-.list-group-item {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
 
 .list-group-item:hover {
-    background-color: #e2e6ea;
+    background-color: #c1c4c7;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .table-container {
     max-height: 400px;
     overflow-y: auto;
+}
+.transbtn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
 }
 .sticky-header {
     position: sticky;
@@ -32,11 +28,13 @@
 }
 
 .positive-row {
-    background-color: lightgreen;
+    color: rgb(0, 156, 0);
+    font-weight: bold;
 }
 
 .negative-row {
-    background-color: lightcoral;
+    color: rgb(156, 0, 0);
+    font-weight: bold;
 }
 
 .list-group-item-primary {
@@ -49,7 +47,6 @@
     border-top: 0;
 }
 
-/* Button styles */
 .btn {
     margin-right: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
