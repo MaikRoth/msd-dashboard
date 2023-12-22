@@ -17,12 +17,14 @@ export class PlayerService {
 
   private transactionHistory = new Map<string, TransactionEntry[]>();
   transactionAdded = new EventEmitter<void>();
+  private teamColors = ['black', 'blue', 'green', 'grey', 'orange', 'purple', 'red', 'silver', 'yellow'];
+  private playerColorsMap = new Map<string, string>();
 
   constructor(
     private http: HttpClient,
     private moneyService: MoneyService) {
-      this.loadTransactionHistoryFromLocalStorage();
-     }
+    this.loadTransactionHistoryFromLocalStorage();
+  }
 
   addTransaction(playerId: string, entry: TransactionEntry): void {
     const history = this.transactionHistory.get(playerId) || [];
@@ -33,20 +35,27 @@ export class PlayerService {
   }
   clearTransactionHistory(): void {
     this.transactionHistory.clear();
-    this.saveTransactionHistoryToLocalStorage(); 
+    this.saveTransactionHistoryToLocalStorage();
   }
-
-  private saveTransactionHistoryToLocalStorage(): void {
-    const serializedHistory = JSON.stringify(Array.from(this.transactionHistory.entries()));
-    localStorage.setItem('transactionHistory', serializedHistory);
+  getPlayerColor(playerId: string): string | undefined {
+    return this.playerColorsMap.get(playerId);
   }
+  getPlayerColorMap(){
+    return this.playerColorsMap
+  }
+  getUnusedColor(): string {
+    const usedColors = new Set(this.playerColorsMap.values());
+    const availableColors = this.teamColors.filter(color => !usedColors.has(color));
 
-  private loadTransactionHistoryFromLocalStorage(): void {
-    const serializedHistory = localStorage.getItem('transactionHistory');
-    if (serializedHistory) {
-      const history = new Map<string, TransactionEntry[]>(JSON.parse(serializedHistory));
-      this.transactionHistory = history;
+    if (availableColors.length === 0) {
+      throw new Error('No more unique colors available');
     }
+
+    const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+    return randomColor;
+  }
+  getRandomColor(): string {
+    return this.teamColors[Math.floor(Math.random() * this.teamColors.length)];
   }
   getTransactionHistory(playerId: string): TransactionEntry[] {
     return this.transactionHistory.get(playerId) || [];
@@ -55,15 +64,17 @@ export class PlayerService {
     const gamesRequest = this.http.get<any[]>('http://localhost:8080/games').pipe(
       map(games => games.flatMap(game => game.participatingPlayers))
     );
-    
+
     const scoreboardRequest = this.http.get<{ scoreboardEntries: any[] }>('http://localhost:8089/scoreboard');
-  
+
     return forkJoin([gamesRequest, scoreboardRequest]).pipe(
       map(([playerNames, scoreboard]) => {
         return playerNames.map(name => {
           const playerScoreboard = scoreboard.scoreboardEntries.find(entry => entry.player.name === name);
-          
+
           if (playerScoreboard && playerScoreboard.player.id) {
+            const randomColor = this.getUnusedColor();
+            this.playerColorsMap.set(playerScoreboard.player.id, randomColor);
             const newPlayer: Player = {
               playerId: playerScoreboard.player.id,
               name: name,
@@ -78,5 +89,18 @@ export class PlayerService {
         }).filter(player => player !== null);
       })
     );
+  }
+
+  private saveTransactionHistoryToLocalStorage(): void {
+    const serializedHistory = JSON.stringify(Array.from(this.transactionHistory.entries()));
+    localStorage.setItem('transactionHistory', serializedHistory);
+  }
+
+  private loadTransactionHistoryFromLocalStorage(): void {
+    const serializedHistory = localStorage.getItem('transactionHistory');
+    if (serializedHistory) {
+      const history = new Map<string, TransactionEntry[]>(JSON.parse(serializedHistory));
+      this.transactionHistory = history;
+    }
   }
 }

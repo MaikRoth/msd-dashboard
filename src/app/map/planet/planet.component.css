@@ -12,7 +12,6 @@
   100% { transform: rotate(360deg); }
 }
 .highlighted {
-  border: 3px solid #ff6347;
   background-color: #fff5f5; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); 
   border-radius: 10px; 
@@ -71,6 +70,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background-color 0.3s; /* Smooth transition for highlighting */
   cursor: pointer;
+  background-size: cover; 
+  background-position: center;
 }
 
 .planet:hover {

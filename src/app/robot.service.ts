@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Robot } from "./map/robot/robot.component";
+import { PlayerService } from "./player.service";
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,9 @@ import { Robot } from "./map/robot/robot.component";
 export class RobotsService {
 
     private robotsEndpoint = "http://localhost:8096/robots"
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient, 
+        private playerService : PlayerService) { }
 
     robots: Robot[] = [];
     highlightedRobots: Robot[] = [];
@@ -28,7 +31,7 @@ export class RobotsService {
                         newRobotsArray.push({
                             ...newRobot,
                             name: robotName,
-                            img: `https://robohash.org/${robotName}.png`
+                            img: [`https://robohash.org/${robotName}.png`, this.getTeamRobotImage(this.playerService.getPlayerColor(newRobot.playerId))]
                         });
                     }
                 });
@@ -39,7 +42,30 @@ export class RobotsService {
             }
         });
     }
-
+    getTeamRobotImage(color: string) {        
+        switch (color) {
+          case 'black':
+            return '../../../assets/images/robots/black-robot.png'
+          case 'blue':
+            return '../../../assets/images/robots/blue-robot.png'
+          case 'green':
+            return '../../../assets/images/robots/green-robot.png'
+          case 'grey':
+            return '../../../assets/images/robots/grey-robot.png'
+          case 'orange':
+            return '../../../assets/images/robots/orange-robot.png'
+          case 'purple':
+            return '../../../assets/images/robots/purple-robot.png'
+          case 'red':
+            return '../../../assets/images/robots/red-robot.png'
+          case 'silver':
+            return '../../../assets/images/robots/silver-robot.png'
+          case 'yellow':
+            return '../../../assets/images/robots/yellow-robot.png'
+          default:
+            return ""
+        }
+      }
     getRobots() {
         this.fetchRobots();
         this.robots.forEach(robot => {

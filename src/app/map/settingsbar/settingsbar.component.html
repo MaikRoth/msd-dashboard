@@ -21,19 +21,19 @@
 
         <div class="option-section">
             <div class="option-item">
-                <input type="radio" id="option1" name="robot-image-size" value="small" 
-                       (change)="changeRobotImageSize('small')" checked>
-                <label for="option1">Small Robot Images</label>
+                <input type="radio" id="option1" name="robot-image-size" value="random" 
+                       [(ngModel)]="robotImageType" (change)="changeRobotImage()">
+                <label for="option1">Random Robot Images</label>
             </div>
             <div class="option-item">
-                <input type="radio" id="option2" name="robot-image-size" value="large" 
-                       (change)="changeRobotImageSize('large')">
-                <label for="option2">Large Robot Images</label>
+                <input type="radio" id="option2" name="robot-image-size" value="team" 
+                       [(ngModel)]="robotImageType" (change)="changeRobotImage()">
+                <label for="option2">Team Robot Images</label>
             </div>
             
             <div class="option-item">
-                <input type="checkbox" id="checkbox1">
-                <label for="checkbox1">Checkbox 1</label>
+                <input type="checkbox" id="checkbox1" [(ngModel)]="showLandscape" (change)="toLandscapeBackgroundImage()">
+                <label for="checkbox1">Show Landscape Backgrounds</label>
             </div>
             <div class="option-item">
                 <input type="checkbox" id="checkbox2">

@@ -5,26 +5,29 @@ import { BehaviorSubject } from 'rxjs';
 export class SharedService {
     private backgroundColorSource = new BehaviorSubject<string>('#ffffff');
     backgroundColor = this.backgroundColorSource.asObservable();
-    private robotImageSizeSource = new BehaviorSubject<string>('small');
-    robotImageSize = this.robotImageSizeSource.asObservable();
-    private mapScaleSource = new BehaviorSubject<number>(1); // Default scale 1
+    private mapScaleSource = new BehaviorSubject<number>(1); 
     mapScale = this.mapScaleSource.asObservable();
+    private landscapeBackgroundSource = new BehaviorSubject<boolean>(false);
+    private robotImageTypeSource = new BehaviorSubject<string>('random');
+    robotImageType = this.robotImageTypeSource.asObservable();
 
     constructor() {
         this.loadTheme();
     }
-
+    setLandscapeBackground(show: boolean) {
+        this.landscapeBackgroundSource.next(show);
+    }
+    get landscapeBackground() {
+        return this.landscapeBackgroundSource.asObservable();
+    }
     setMapScale(scale: number) {
         this.mapScaleSource.next(scale);
     }
-    
+
     changeBackgroundColor(color: string) {
         this.backgroundColorSource.next(color);
     }
 
-    setRobotImageSize(size: string) {
-        this.robotImageSizeSource.next(size);
-    }
     private isDarkMode = false;
 
     toggleDarkMode(): void {
@@ -32,7 +35,10 @@ export class SharedService {
         this.updateBodyClass();
         this.saveTheme();
     }
-
+    
+    setRobotImageType(type: string) {
+        this.robotImageTypeSource.next(type);
+    }
     private updateBodyClass(): void {
         document.body.classList.toggle('dark-mode', this.isDarkMode);
     }

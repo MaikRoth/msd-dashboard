@@ -7,17 +7,16 @@ import { Subject } from "rxjs";
 interface Resource {
     amount: number;
     capacity: number;
-  }
+}
 @Injectable({
     providedIn: 'root'
 })
-export class MapService {
+export class PlanetService {
 
     private planetsEndpoint = "http://localhost:8096/planets"
     constructor(private http: HttpClient) { }
 
     private planets: Planet[] = [];
-
 
     fetchPlanets() {
         return this.http.get(this.planetsEndpoint).subscribe({
@@ -36,8 +35,8 @@ export class MapService {
         return this.planets;
     }
 
-    getPlanet(planetId: string): Planet{
-        return this.planets.find(planet => {planet.planetId == planetId})
+    getPlanet(planetId: string): Planet {
+        return this.planets.find(planet => { planet.planetId == planetId })
     }
 
     private mapToPlanet(obj: any): Planet {

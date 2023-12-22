@@ -5,7 +5,8 @@
         type="button" (click)="toggleCollapse()" [attr.aria-expanded]="!isCollapsed">
         {{ robot.name }}
         <div class="spinner" *ngIf="isLoading"></div>
-        <img [src]="robot.img" style="width:50px;" (load)="isLoading = false">
+        <img *ngIf="robotImageType === 'random'" [src]="robot.img[0]" style="width:50px; margin-left: 15px;" (load)="isLoading = false">
+        <img *ngIf="robotImageType === 'team'" [src]="robot.img[1]" style="width:50px; margin-left: 15px;" (load)="isLoading = false">
         <img *ngIf="infoToShow === 'Cargo'" style="margin-left: 15px;" class="cargoimage"
           [src]="getMaterialImage(getMostMaterial(robot.cargo))" [title]="getMostMaterial(robot.cargo)" alt="" />
       </button>
@@ -26,7 +27,10 @@
               <img src="../../../assets/images/icons/player.png" class="cargoimage" alt="player" />
             </div>
             <div class="text-button" (click)="copyToClipboard(robot.robotId)">
-              <img [src]="robot.img" class="cargoimage" alt="robot" />
+              <img *ngIf="robotImageType === 'random'" [src]="robot.img[0]" class="cargoimage" alt="robot"
+                (load)="isLoading = false">
+              <img *ngIf="robotImageType === 'team'" [src]="robot.img[1]" class="cargoimage" alt="robot"
+                (load)="isLoading = false">
             </div>
           </div>
         </div>
@@ -55,19 +59,19 @@
         <div class="cargo-display">
           <div class="cargo-container">
             <div class="cargo-item" *ngIf="robot.cargo.coal > 0">
-              <img title="Coal" [src]="getMaterialImage('coal')" alt="Coal" class="cargoimage"/>
+              <img title="Coal" [src]="getMaterialImage('coal')" alt="Coal" class="cargoimage" />
               <span>{{ robot.cargo.coal }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.iron > 0">
-              <img title="Iron" [src]="getMaterialImage('iron')" alt="Iron" class="cargoimage"/>
+              <img title="Iron" [src]="getMaterialImage('iron')" alt="Iron" class="cargoimage" />
               <span>{{ robot.cargo.iron }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.gem > 0">
-              <img title="Gem" [src]="getMaterialImage('gem')" alt="Gem" class="cargoimage"/>
+              <img title="Gem" [src]="getMaterialImage('gem')" alt="Gem" class="cargoimage" />
               <span>{{ robot.cargo.gem }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.gold > 0">
-              <img title="Gold" [src]="getMaterialImage('gold')" alt="Gold" class="cargoimage"/>
+              <img title="Gold" [src]="getMaterialImage('gold')" alt="Gold" class="cargoimage" />
               <span>{{ robot.cargo.gold }}</span>
             </div>
             <div class="cargo-item" *ngIf="robot.cargo.platin > 0">

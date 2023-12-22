@@ -11,10 +11,14 @@ export class SettingsbarComponent {
 
   constructor(private sharedService: SharedService) {}
   scale = 1.0
-  
+  robotImageType: string = 'random'; 
   isCollapsed: boolean = true;
   showAchievements: boolean = false;
+  showLandscape = false;
 
+  toLandscapeBackgroundImage() {
+    this.sharedService.setLandscapeBackground(this.showLandscape);  
+  }
   toggleDarkMode(){
     this.sharedService.toggleDarkMode()
   }
@@ -22,11 +26,11 @@ export class SettingsbarComponent {
     this.sharedService.setMapScale(this.scale);
 
   }
+  changeRobotImage() {
+    this.sharedService.setRobotImageType(this.robotImageType);
+  }
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
-  }
-  changeRobotImageSize(size: string) {
-    this.sharedService.setRobotImageSize(size);
   }
 
   toggleAchievements() {

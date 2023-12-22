@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RobotsService } from '../../robot.service';
+import { SharedService } from '../../shared/shared.service';
+import { Subscription } from 'rxjs';
+import { PlayerService } from '../../player.service';
 
 export type Robot = {
   robotId: string,
@@ -10,7 +13,7 @@ export type Robot = {
   cargo: Cargo,
   highlighted: boolean,
   name?: string,
-  img?: string
+  img?: string[]
 }
 export type Vitals = {
   health: number,
@@ -83,19 +86,29 @@ export enum ResourceType {
   templateUrl: './robot.component.html',
   styleUrl: './robot.component.css'
 })
-export class RobotComponent {
+export class RobotComponent implements OnInit , OnDestroy {
   @Input() robot: Robot
   @Input() infoToShow: string;
+  robotImageType: string;
+  private imageTypeSubscription: Subscription;
 
-  constructor(private robotService: RobotsService) { }
+  constructor(
+    private robotService: RobotsService,
+    private sharedService: SharedService,
+    private playerService: PlayerService) { }
 
   isCollapsed = true;
   isLoading = true;
 
+  ngOnInit() {
+    this.imageTypeSubscription = this.sharedService.robotImageType.subscribe(type => {
+      this.robotImageType = type;
+    });
+  }
+
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
-
 
   toggleHighlighting() {
     if (this.robot.highlighted) {
@@ -234,6 +247,11 @@ export class RobotComponent {
       return vitalColors['nearDeath'];
     } else {
       return vitalColors['almostDead'];
+    }
+  }
+  ngOnDestroy() {
+    if (this.imageTypeSubscription) {
+      this.imageTypeSubscription.unsubscribe();
     }
   }
 }

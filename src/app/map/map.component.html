@@ -35,7 +35,7 @@
       <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
     </div>
     <div class="col-md-10 position-relative">
-      <div class="game-container">
+      <div class="game-container" >
         <app-game *ngIf="!fetching" [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
       </div>
       <div class="map-outer-container">
@@ -45,7 +45,8 @@
               <app-planet *ngIf="planet; else noPlanet" [planet]="planet" [showInfo]="showPlanetInfo"
                 [class.highlighted]="planet.highlighted"></app-planet>
               <ng-template #noPlanet>
-                <div class="noPlanet"></div>
+                <div class="noPlanet" *ngIf="type === 'landscape'" [style.background-image]="getBGimage()"></div>
+                <div class="noPlanet" *ngIf="type === 'icon'"></div>
               </ng-template>
             </div>
           </div>

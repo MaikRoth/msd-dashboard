@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MapService } from '../map.service';
+import { PlanetService } from '../planet.service';
 import { Subscription, interval, switchMap, takeWhile } from 'rxjs';
 import { RobotsService } from '../robot.service';
 import { GamesService } from '../games.service';
@@ -31,17 +31,20 @@ export class MapComponent implements OnInit, OnDestroy {
   showPlanetInfo = true;
   errorUrl: string = "";
   mapScale: number = 1.0;
+  type = 'landscape'
+  showLandscapes: boolean = false;
 
   private oldRobots: Robot[];
   private backgroundSubscription: Subscription;
   private planetSubscription: Subscription;
   private robotSubscription: Subscription;
   private gamesSubscription: Subscription;
+  private landscapeSubscription: Subscription;
   private playerSubscription: Subscription;
   constructor(
     private moneyService: MoneyService,
     private sharedService: SharedService,
-    private mapService: MapService,
+    private planetService: PlanetService,
     private robotService: RobotsService,
     private gamesService: GamesService,
     private playerService: PlayerService,
@@ -66,8 +69,17 @@ export class MapComponent implements OnInit, OnDestroy {
       console.log('New Scale:', scale);
       this.mapScale = scale;
     });
+    this.landscapeSubscription = this.sharedService.landscapeBackground.subscribe(value => {
+      this.showLandscapes = value;
+    });
   }
 
+  getBGimage(){
+    if (this.showLandscapes){
+      return `url('../assets/images/landscapes/void.png')` 
+    }
+    return "" 
+  }
   handleMouseMove(event: MouseEvent, imageId: string) {
     const img = document.getElementById(imageId) as HTMLImageElement;
 
@@ -102,7 +114,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   onGetPlanets() {
-    this.planets = this.mapService.getPlanets();
+    this.planets = this.planetService.getPlanets();
     this.setupGrid();
     this.fetching = false;
   }
@@ -292,6 +304,8 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.backgroundSubscription) {
       this.backgroundSubscription.unsubscribe();
     }
+    this.landscapeSubscription.unsubscribe();
+
     saveGamesToLocalStorage(this.games);
   }
 }
