@@ -33,6 +33,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mapScale: number = 1.0;
   type = 'landscape'
   showLandscapes: boolean = false;
+  errorMessage : string;
 
   private oldRobots: Robot[];
   private backgroundSubscription: Subscription;
@@ -66,12 +67,16 @@ export class MapComponent implements OnInit, OnDestroy {
       });
     });
     this.sharedService.mapScale.subscribe(scale => {
-      console.log('New Scale:', scale);
       this.mapScale = scale;
     });
     this.landscapeSubscription = this.sharedService.landscapeBackground.subscribe(value => {
       this.showLandscapes = value;
     });
+    setTimeout(() => {
+      if (this.players.length <= 0 && this.games.length >= 1) {
+        this.errorMessage = 'Failed to fetch players. Please try again later.';
+      }
+    }, 30000);
   }
 
   getBGimage(){

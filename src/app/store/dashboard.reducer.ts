@@ -6,7 +6,7 @@ import { addCustomGame, loadGamesSuccess, loadPlanetsSuccess, loadPlayersSuccess
 import { createReducer, on } from '@ngrx/store';
 
 const initialCustomGamesState = {
-  customGames: [{ players: 6, rounds: 50, duration: 15000 }]
+  customGames: [{ players: 6, rounds: 120, duration: 15000 }]
 }
 export const customGamesReducer = createReducer(
   initialCustomGamesState,

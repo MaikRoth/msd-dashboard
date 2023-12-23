@@ -23,7 +23,6 @@ export class RobotsService {
                 let newRobotsArray: Robot[] = [];
                 updatedRobots.forEach(newRobot => {
                     const existingRobot = this.robots.find(r => r.robotId === newRobot.robotId);
-
                     if (existingRobot) {
                         newRobotsArray.push({ ...existingRobot, ...newRobot });
                     } else {

@@ -101,6 +101,8 @@ export class PlanetComponent implements OnInit, OnDestroy {
 
   }
   getTeamRobotImage(color: string) {
+    console.log('palent comp: ',color);
+    
     switch (color) {
       case 'black':
         return '../../../assets/images/robots/black-robot.png'

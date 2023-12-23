@@ -22,7 +22,8 @@ export class GameComponent implements OnInit {
   constructor(
     private gamesService: GamesService, 
     private router: Router, 
-    private moneyService: MoneyService) {}
+    private moneyService: MoneyService,
+    private playerService: PlayerService) {}
 
   ngOnInit() {
     this.initializeCollapsedState();
@@ -51,8 +52,9 @@ export class GameComponent implements OnInit {
   onStartGame(id: string) {
     this.gamesService.startGame(id).subscribe(() => {
       this.redirectToMap();
-      this.moneyService.clear();
     })
+    this.moneyService.clear();
+    this.playerService.clearColorMap();
   }
 
   redirectToMap() {
@@ -66,7 +68,8 @@ export class GameComponent implements OnInit {
   onEndGame(id: string) {
     this.gamesService.endGame(id).subscribe(() => {
       this.redirectToControlPanel()
-      this.moneyService.clear()
     })
+    this.moneyService.clear()
+    this.playerService.clearColorMap();
   }
 }

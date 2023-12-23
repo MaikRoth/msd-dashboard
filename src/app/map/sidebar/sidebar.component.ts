@@ -13,5 +13,5 @@ export class SidebarComponent {
     @Input() players : Player[];
     @Input() fetching : boolean;
     info = 'No Highlight'
-        
+    
 }

@@ -2,9 +2,9 @@
      [ngClass]="{'highlighted': planet.highlighted}" 
      [ngStyle]="planet.highlighted ? {
          'border': '3px solid', 
-         'border-image': 'linear-gradient(to right, ' + calculateRobotProportions() + ') 1 stretch', 
-         'background-image': getBackgroundImage(planet.resourceType)
-     } : {}" 
+         'border-image': 'linear-gradient(to right, ' + calculateRobotProportions() + ') 1 stretch'
+     } : {}"
+     [style.background-image]="getBackgroundImage(planet.resourceType)" 
      (click)="copyToClipboard(planet.planetId)">
   <div class="row">
     <div class="col-6">

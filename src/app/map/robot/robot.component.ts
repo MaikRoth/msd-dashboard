@@ -94,8 +94,7 @@ export class RobotComponent implements OnInit , OnDestroy {
 
   constructor(
     private robotService: RobotsService,
-    private sharedService: SharedService,
-    private playerService: PlayerService) { }
+    private sharedService: SharedService) { }
 
   isCollapsed = true;
   isLoading = true;

@@ -19,7 +19,7 @@ export type CustomGame = {
 export class ControlpanelComponent implements OnInit {
 
   players: number = 6;
-  rounds: number = 50;
+  rounds: number = 120;
   duration: number = 15000;
   customGames$: Observable<{customGames:CustomGame[]}>;
   shouldShake: boolean = false;

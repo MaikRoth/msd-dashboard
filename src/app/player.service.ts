@@ -17,7 +17,7 @@ export class PlayerService {
 
   private transactionHistory = new Map<string, TransactionEntry[]>();
   transactionAdded = new EventEmitter<void>();
-  private teamColors = ['black', 'blue', 'green', 'grey', 'orange', 'purple', 'red', 'silver', 'yellow'];
+  private teamColors = [ 'blue', 'green', 'orange', 'purple', 'red', 'yellow']; // add this if more than 6 player. 'grey', 'silver', 'black',
   private playerColorsMap = new Map<string, string>();
 
   constructor(
@@ -37,11 +37,14 @@ export class PlayerService {
     this.transactionHistory.clear();
     this.saveTransactionHistoryToLocalStorage();
   }
-  getPlayerColor(playerId: string): string | undefined {
+  getPlayerColor(playerId: string): string {
     return this.playerColorsMap.get(playerId);
   }
   getPlayerColorMap(){
     return this.playerColorsMap
+  }
+  clearColorMap(){
+    this.playerColorsMap.clear();
   }
   getUnusedColor(): string {
     const usedColors = new Set(this.playerColorsMap.values());

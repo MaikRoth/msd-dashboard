@@ -26,16 +26,19 @@
 </div>
 <div class="container-fluid pt-3" *ngIf="grid.length > 0">
   <div class="row">
-    <div style="margin: 25px; padding-top: 0;"
-      class="col-md-2" *ngIf="players.length <= 0 && games.length >= 1">
-      Fetching Players...
+    <div id="spinner-container" *ngIf="players.length <= 0 && games.length >= 1" style="margin: 25px;"
+      class="spinner-container col-md-2">
+      <div class="spinner-content">
+        <div class="spinner"></div>
+        <p>Fetching Gamelog data...</p>
+      </div>
     </div>
-    <div class="col-md-2"
-      *ngIf="players.length > 0 && games.length >= 1">
+    <div class="cold-md-3 errorMessage"  *ngIf="errorMessage">{{errorMessage}}</div>
+    <div class="col-md-3" *ngIf="players.length > 0 && games.length >= 1">
       <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
     </div>
-    <div class="col-md-10 position-relative">
-      <div class="game-container" >
+    <div class="col position-relative map-col">
+      <div class="game-container">
         <app-game *ngIf="!fetching" [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
       </div>
       <div class="map-outer-container">
