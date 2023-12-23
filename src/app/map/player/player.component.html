@@ -1,77 +1,78 @@
-<ul class="list-group mt-3">
-  <li class="list-group-item list-group-item-primary" (click)="copyToClipboard(player.playerId)">{{ player.name }}</li>
-  <li class="list-group-item lgi-body">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div style="margin-right: 15px;">
-        Money: {{ player.money }} 
-      </div>
-      <button class="btn mb-2 transbtn" (click)="toggleTransactionHistory()"
-        style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s, transform 0.3s;">
-        Transactions
-      </button>
-    </div>
-    
-    <div *ngIf="showTransactionHistory">
-      <input type="text" [(ngModel)]="searchTerm" class="form-control mb-2" placeholder="Search for Entity">
-      <div #tableContainer class="table-container mt-2" >
-        <table class="table table-hover table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th class="sticky-header">Type</th>
-              <th class="sticky-header">Entity</th>
-              <th class="sticky-header">Item</th>
-              <th class="sticky-header">Amount</th>
-              <th class="sticky-header">Earning</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let transaction of filteredTransactions" [ngClass]="{
-                  'table-success': transaction.earning > 0,
-                  'table-danger': transaction.earning < 0
-                }">
-              <td>{{ transaction.type }}</td>
-              <td (click)="handleClickedCell(transaction.entity)"
-                [class.clicked-entity]="clickedCells[transaction.entity]"
-                [class.clickable-entity]="transaction.entity && transaction.entity !== 'Admin'">
-                {{ transaction.entity }}
-              </td>
-              <td >{{ transaction.item === 'miningLevel' ? 'mL' : transaction.item === 'miningSpeed' ? 'mS': transaction.item === 'energyRegeneration' ? 'eRegen': transaction.item}}</td>
-              <td>{{ transaction.amount }}</td>
-              <td [ngClass]="{
-                'positive-row': transaction.earning > 0,
-                'negative-row': transaction.earning < 0
-              }">{{ transaction.earning > 0 ? '+' + transaction.earning : transaction.earning }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
-    </div>
-  </li>
-  <li class="list-group-item lgi-body">
-    <div class="container" *ngIf="player.robots.length > 0">
-      Robots:
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-primary" (click)="toggleHighlightRobots()">
-            <span [innerHTML]="highlightRobots ? '<strong><u>Highlight All</u></strong>' : 'Highlight All'"></span>
+<div class="player-card mb-3">
+  <div class="player-header p-3" [ngStyle]="{'background-color': getPlayerColor(), 'color': getAdjustedColor()}" (click)="togglePlayerCollapse()" (click)="copyToClipboard(player.playerId)">
+      {{ player.name }}
+  </div>
+  <div class="player-body p-3" *ngIf="!isCollapsed">
+      <div class="money-transaction-container mb-3">
+          <div class="money-display">
+              Money: {{ player.money | currency}}
+          </div>
+          <button class="btn transaction-button" (click)="toggleTransactionHistory()">
+              Transactions
           </button>
-        </div>
-        <div class="col">
-          <button class="btn btn-success" (click)="showRobots = !showRobots">
-            Inspect ({{
-            player.robots.length
-            }})
-          </button>
-        </div>
       </div>
-    </div>
 
-    <div *ngIf="showRobots" style="margin-top: 3px; max-height: 700px; overflow: auto;">
-      <input type="text" [(ngModel)]="robotSearchTerm" class="form-control" placeholder="Search Robots">
+      <div *ngIf="showTransactionHistory">
+          <input type="text" [(ngModel)]="searchTerm" class="form-control mb-2" placeholder="Search for Entity">
+          <div class="table-container mt-2" style="height: 300px; overflow-y: auto;">
+            <table class="custom-table">
+              <thead>
+                  <tr>
+                      <th>Type</th>
+                      <th>Unit</th>
+                      <th>Item</th>
+                      <th>Amt.</th>
+                      <th>Pay</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let transaction of filteredTransactions" [ngClass]="{
+                          'positive-transaction': transaction.earning > 0,
+                          'negative-transaction': transaction.earning < 0
+                        }">
+                      <td>{{ transaction.type }}</td>
+                      <td (click)="handleClickedCell(transaction.entity)"
+                          [class.clicked-entity]="clickedCells[transaction.entity]"
+                          [class.clickable-entity]="transaction.entity && transaction.entity !== 'MSD'">
+                          {{ transaction.entity }}
+                      </td>
+                      <td>{{ transaction.item | transactionItemFormat }}</td>
+                      <td>{{ transaction.amount }}</td>
+                      <td>{{ transaction.earning | currency }}</td>
+                  </tr>
+              </tbody>
+          </table>
+          
+          </div>
+      </div>
 
-      <app-robot *ngFor="let robo of filteredRobots" [robot]="robo" [infoToShow]="tag"></app-robot>
-    </div>
-    <div *ngIf="player.robots.length < 1" style="color: red">No Robots</div>
-  </li>
-</ul>
+      <div class="robot-section mt-3" *ngIf="player.robots.length > 0">
+          <div class="header-text">Robots:</div>
+          <div class="row mt-2">
+            <div class="col text-center">
+              <button class="btn custom-btn btn-primary" (click)="toggleHighlightRobots()">
+                  <span [innerHTML]="highlightRobots ? '<strong><u>Highlight All</u></strong>' : 'Highlight All'"></span>
+              </button>
+          </div>
+          <div class="col text-center">
+              <button class="btn custom-btn btn-success" (click)="showRobots = !showRobots">
+                  <span [innerHTML]="showRobots ? '<strong><u>Inspect</u></strong>' : 'Inspect'"></span> ({{ player.robots.length }})
+              </button>
+          </div>
+          </div>
+      </div>
+
+      <div *ngIf="showRobots" class="robot-list mt-3">
+          <input type="text" [(ngModel)]="robotSearchTerm" class="form-control mb-2" placeholder="Search Robots">
+          <div class="robot-container">
+              <app-robot *ngFor="let robo of filteredRobots" [robot]="robo" [infoToShow]="tag"></app-robot>
+          </div>
+      </div>
+
+      <div *ngIf="player.robots.length < 1" class="no-robots-text">
+          No Robots
+      </div>
+  </div>
+</div>
+

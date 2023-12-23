@@ -85,7 +85,7 @@ export class PlayerService {
               money: 0
             };
             this.moneyService.setMoney(newPlayer.playerId, 500);
-            this.addTransaction(newPlayer.playerId, { type: 'INIT', entity: "Admin", item: 'money', amount: 1, earning: 500 });
+            this.addTransaction(newPlayer.playerId, { type: 'INIT', entity: "MSD", item: 'cash', amount: 1, earning: 500 });
             return newPlayer;
           }
           return null;

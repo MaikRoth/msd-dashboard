@@ -2,22 +2,15 @@
   <div class="game-title" (click)="toggleCollapse(game.gameId)">
     <h2>Game: {{ game.gameId }}</h2>
     <div class="game-stats">
-      <span
-        class="status-badge"
-        [class.playing]="game.gameStatus === 'started'"
-        (click)="redirectToMap()"
-        >{{ game.gameStatus }}</span
-      >
-      <span class="game-info" *ngIf="planets"
-        >Planets: <strong>{{ planets.length }}</strong></span
-      >
-      <span class="game-info" *ngIf="robots"
-        >Robots: <strong>{{ robots.length }}</strong></span
-      >
+      <span class="status-badge" [class.playing]="game.gameStatus === 'started'" (click)="redirectToMap()">
+        {{ game.gameStatus }}
+      </span>
+      <span class="game-info" *ngIf="planets">Planets: <strong>{{ planets.length }}</strong></span>
+      <span class="game-info" *ngIf="robots">Robots: <strong>{{ robots.length }}</strong></span>
     </div>
   </div>
   <div class="game-body" *ngIf="!collapsedStates.get(game.gameId)">
-    <div class="game-details">
+   <div class="game-details">
       <div class="detail">
         Max Players: <strong>{{ game.maxPlayers }}</strong>
       </div>

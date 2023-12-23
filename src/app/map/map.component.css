@@ -1,42 +1,34 @@
+.game-container {
+    margin-bottom: 15px;
+}
+
 .map-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 0;
     transform-origin: top left;
     transition: transform 0.3s ease;
-    width: 100%;
-    max-width: 100%;
-    overflow: auto;
+}
+
+.map-row {
+    width: 80px;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar-column {
+    padding-right: 0;
 }
 
 .map-outer-container {
-    margin-top: 150px;
     width: 100%;
-    max-width: 100%;
-    overflow: auto;
-}
-.map-col{
-    width: 100%;
-    max-width: 100%;
-    overflow: auto;
-}
-.col-md-8 {
+    min-width: 1300px;
+    transform-origin: top left;
     position: relative;
-}
 
-.game-container {
-    position: absolute;
-    left: 40%;
-    transform: translateX(-50%);
-    z-index: 10;
-    width: auto;
-}
-
-.center-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
 }
 
 .map-cell {
@@ -120,50 +112,65 @@
     background-color: #218838;
 }
 
-.or-text {
-    font-size: 2em;
-    color: #007bff;
-    margin: 0;
+
+.spinner-container-gamelog {
+    position: fixed;
+    top: 75px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .spinner-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start; 
+    align-items: flex-start;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .spinner-content {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-content {
     display: flex;
     flex-direction: column;
-    align-items: center; 
-  }
-  
-  .spinner {
-    border: 5px solid rgba(0,0,0,0.1);
+    align-items: center;
+}
+
+.spinner {
+    border: 5px solid rgba(0, 0, 0, 0.1);
     border-top-color: #3498db;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .spinner-content p {
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-content p {
     margin-top: 10px;
     color: #333;
     font-size: 1rem;
     font-weight: 500;
-  }
-  
-  .errorMessage {
+}
+.no-gutters {
+    --bs-gutter-x: 0;
+}
+.errorMessage {
     padding: 10px;
     background-color: #ffcccc;
     border: 1px solid #ff0000;
@@ -171,5 +178,5 @@
     border-radius: 5px;
     margin-top: 20px;
     text-align: center;
-  }
-  
+    width: auto;
+}

@@ -18,7 +18,8 @@ import { StoreModule } from '@ngrx/store';
 import { customGamesReducer, mapReducer } from './store/dashboard.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.component';
-
+import { TransactionItemFormatPipe } from './transaction-item-format.pipe';
+import { ChartComponent } from './shared/chart/chart.component';
 
 
 @NgModule({
@@ -35,6 +36,8 @@ import { GameshandlerComponent } from './controlpanel/gameshandler/gameshandler.
     RobotComponent,
     SettingsbarComponent,
     GameshandlerComponent,
+    ChartComponent,
+    TransactionItemFormatPipe,
   ],
   imports: [
     BrowserModule,

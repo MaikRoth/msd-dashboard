@@ -17,7 +17,7 @@ export type Player = {
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class PlayerComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() tag: string;
   @ViewChild('tableContainer') private tableContainer: ElementRef;
@@ -30,6 +30,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewChecked {
   showRobots = false;
   highlightRobots = false;
   searchTerm: string = ''; 
+  isCollapsed = true;
   transactions: TransactionEntry[] = []
   get filteredTransactions(): TransactionEntry[] {
     if (!this.searchTerm) {
@@ -52,20 +53,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewChecked {
     private robotService: RobotsService, 
     private moneyService: MoneyService, 
     private playerService: PlayerService) {
-      this.transactionAddedSubscription = this.playerService.transactionAdded.subscribe(() => {
-        this.scrollToBottom();
-      });
   }
-
-
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  getPlayerColor():string{
+    return this.playerService.getPlayerColor(this.player.playerId)
   }
-
-  scrollToBottom(): void {
-    try {
-      this.tableContainer.nativeElement.scrollTop = this.tableContainer.nativeElement.scrollHeight;
-    } catch(err) { }
+  togglePlayerCollapse(){
+    this.isCollapsed = !this.isCollapsed;
   }
   handleClickedCell(entity: string) {
     if (entity && entity !== 'Admin') {
@@ -109,8 +102,22 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.robotService.highlightRobotsOfPlayer(this.player.playerId)
     }
   }
+  isColorDark(color: string): boolean {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luminance < 140;
+  }
+
+  getAdjustedColor(): string {
+    const color = this.getPlayerColor();
+    return this.isColorDark(color) ? "#FFFFFF" : "#000000";
+  }
   ngOnDestroy(): void {
     this.playerSubscription.unsubscribe();
     this.transactionAddedSubscription.unsubscribe();
   }
+
 }

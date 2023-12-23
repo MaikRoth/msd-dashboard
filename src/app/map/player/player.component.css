@@ -1,79 +1,147 @@
 
-.lgi-body:hover {
-    background-color: #c1c4c7;
+.custom-container {
+    padding: 20px;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    background-color: #f8f9fa; 
+}
+
+.header-text {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.custom-btn {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1rem;
+    border-radius: 5px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+}
+
+.money-transaction-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f2f2f2; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+}
+
+.money-display {
+    margin-right: 15px;
+    font-size: 1.1rem;
+    color: #333; 
+    font-weight: bold;
+}
+
+.transaction-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.transaction-button:hover {
+    background-color: #3e8e41;
+    transform: translateY(-2px); 
+}
+.player-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.player-header {
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.player-body {
+    background-color: #f8f9fa;
 }
 
 .table-container {
-    max-height: 400px;
-    overflow-y: auto;
+    max-height: 175px;
+    overflow: auto;
 }
-.transbtn:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+
+.robot-section {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
 }
-.sticky-header {
-    position: sticky;
-    top: 0;
+
+.robot-list {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.robot-container {
+    max-height: 300px;
+    overflow: auto;
+    margin-top: 3px;
+}
+
+.no-robots-text {
+    color: red;
+    text-align: center;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
     background-color: white;
-    z-index: 1; 
-}
-.clickable-entity {
-    cursor: pointer;
-    text-decoration: underline;
 }
 
-.clicked-entity {
-    background-color: #f7e121;
-}
-
-.positive-row {
-    color: rgb(0, 156, 0);
-    font-weight: bold;
-}
-
-.negative-row {
-    color: rgb(156, 0, 0);
-    font-weight: bold;
-}
-
-.list-group-item-primary {
-    background-color: #cce5ff;
-    color: #004085;
-    border-color: #b8daff;
-}
-
-.list-group-item:not(:first-child) {
-    border-top: 0;
-}
-
-.btn {
-    margin-right: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.btn:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-primary {
+.custom-table thead {
     background-color: #007bff;
     color: white;
 }
 
-.btn-success {
-    background-color: #28a745;
+.custom-table th, .custom-table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.custom-table th {
+    position: sticky;
+    top: 0;
+    background-color: #007bff;
     color: white;
+    z-index: 10;
+}
+.custom-table tbody tr:hover {
+    background-color: #f2f2f2;
 }
 
-.inspection-container {
-    margin-top: 1rem;
-    max-height: 700px;
-    overflow: auto;
+.positive-transaction {
+    background-color: #d4edda;
 }
 
-.no-robots {
-    color: #dc3545;
+.negative-transaction {
+    background-color: #f8d7da;
+}
+
+.clicked-entity {
     font-weight: bold;
+    color: #007bff;
+}
+
+.clickable-entity {
+    cursor: pointer;
+    text-decoration: underline;
 }

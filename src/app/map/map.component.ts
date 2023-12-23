@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlanetService } from '../planet.service';
 import { Subscription, interval, switchMap, takeWhile } from 'rxjs';
 import { RobotsService } from '../robot.service';
@@ -13,6 +13,7 @@ import { Game } from '../controlpanel/gameshandler/gameshandler.component';
 import { Store } from '@ngrx/store';
 import { SharedService } from '../shared/shared.service';
 import { MoneyService } from '../money.service';
+import { ChartComponent } from '../shared/chart/chart.component';
 
 @Component({
   selector: 'app-map',
@@ -20,13 +21,13 @@ import { MoneyService } from '../money.service';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, OnDestroy {
+  @ViewChild(ChartComponent) chartComponent: ChartComponent;
+
   planets: Planet[] = [];
   robots: Robot[] = [];
-  
   players: Player[] = [];
   games: Game[]
   grid: (Planet | null)[][] = [];
-  private intervalTime = 5000;
   fetching = true;
   showPlanetInfo = true;
   errorUrl: string = "";
@@ -35,6 +36,8 @@ export class MapComponent implements OnInit, OnDestroy {
   showLandscapes: boolean = false;
   errorMessage : string;
 
+  private intervalTime = 5000;
+  private currentRound = 0;
   private oldRobots: Robot[];
   private backgroundSubscription: Subscription;
   private planetSubscription: Subscription;
@@ -85,6 +88,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     return "" 
   }
+
   handleMouseMove(event: MouseEvent, imageId: string) {
     const img = document.getElementById(imageId) as HTMLImageElement;
 
@@ -135,6 +139,10 @@ export class MapComponent implements OnInit, OnDestroy {
       this.games = games
       if (this.games) {
         this.intervalTime = this.games[0].roundLengthInMillis
+        if (this.games[0].currentRoundNumber > this.currentRound){
+          this.currentRound = this.games[0].currentRoundNumber;
+        }
+        
       }
       if (this.games.length === 0) {
         this.players = [];

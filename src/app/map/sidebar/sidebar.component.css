@@ -3,13 +3,12 @@
 }
 
 .sidebar {
-    background-color: #f9f9f9;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s, background-color 0.3s;
+    background-color: #f0f0f0;
+    height: fit-content;
     border-radius: 8px;
-    margin-bottom: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .form-check {
@@ -38,11 +37,4 @@
 h4 {
     color: #007bff;
     margin-bottom: 15px;
-}
-
-.sticky-sidebar {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
 }

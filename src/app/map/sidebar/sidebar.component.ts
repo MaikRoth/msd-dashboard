@@ -10,8 +10,7 @@ import { PlayerService } from '../../player.service';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-    @Input() players : Player[];
-    @Input() fetching : boolean;
-    info = 'No Highlight'
-    
+  @Input() players: Player[];
+  @Input() fetching: boolean;
+  info = 'No Highlight'
 }

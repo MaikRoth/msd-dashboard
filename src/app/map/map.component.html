@@ -1,50 +1,52 @@
-<div class="text-center" *ngIf="fetching">
-  <div class="spinner-grow spinner-border m-5" style="width: 9rem; height: 9rem; position: relative; top: 300px"
-    role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
 <div class="custom-container" *ngIf="!fetching && games.length < 1">
   <div class="custom-row">
     <div class="custom-col">
-      <h4>No Backend Running</h4>
-      <img src="../../assets/images/website/noBackend.png" class="image-style interactable-image"
-        (mousemove)="handleMouseMove($event, 'image1')" (mouseleave)="resetTilt('image1')" alt="" id="image1" />
-    </div>
-    <div class="custom-col">
-      <h1 class="or-text">OR</h1>
-    </div>
-    <div class="custom-col">
-      <h4>No Game Created</h4>
-      <img src="../../assets/images/website/shrug-robot.png" class="image-style interactable-image"
-        (mousemove)="handleMouseMove($event, 'image2')" (mouseleave)="resetTilt('image2')" alt="" id="image2" />
+      <h4>Currently no game running</h4>
+      <img style="width: 300px; height: auto;" src="../../assets/images/website/shrug-robot.png"
+        class="image-style interactable-image" (mousemove)="handleMouseMove($event, 'image2')"
+        (mouseleave)="resetTilt('image2')" alt="" id="image2" />
+      <br>
       <button class="btn-create-game" (click)="redirectToControlpanel()">
         Create a Game
       </button>
     </div>
   </div>
 </div>
-<div class="container-fluid pt-3" *ngIf="grid.length > 0">
-  <div class="row">
-    <div id="spinner-container" *ngIf="players.length <= 0 && games.length >= 1" style="margin: 25px;"
-      class="spinner-container col-md-2">
-      <div class="spinner-content">
-        <div class="spinner"></div>
-        <p>Fetching Gamelog data...</p>
-      </div>
+
+
+<div class="container-fluid">
+  <div class="row" style="padding-top: 15px;">
+    <div class="col-md-3 col-12 sidebar-column">
+      <ng-container *ngIf="players.length <= 0 && games.length >= 1; else sideBar">
+        <div id="spinner-container" style="margin: 15px;" class="spinner-container-gamelog">
+          <div class="spinner-content">
+            <div class="spinner"></div>
+            <p>Fetching Gamelog data...</p>
+          </div>
+        </div>
+      </ng-container>
+      <div class="col-md-12 errorMessage" *ngIf="errorMessage">{{errorMessage}}</div>
+      <ng-template #sideBar>
+        <div class="sidebar-content">
+          <app-sidebar *ngIf="games.length >= 1" [players]="players" [fetching]="fetching"></app-sidebar>
+        </div>
+      </ng-template>
     </div>
-    <div class="cold-md-3 errorMessage"  *ngIf="errorMessage">{{errorMessage}}</div>
-    <div class="col-md-3" *ngIf="players.length > 0 && games.length >= 1">
-      <app-sidebar [players]="players" [fetching]="fetching"></app-sidebar>
-    </div>
-    <div class="col position-relative map-col">
+    <div class="col-md-9 col-12">
+
       <div class="game-container">
-        <app-game *ngIf="!fetching" [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
+        <app-game [game]="games[0]" [planets]="planets" [robots]="robots"></app-game>
       </div>
-      <div class="map-outer-container">
-        <div class="map-container" *ngIf="games.length > 0" [ngStyle]="{'transform': 'scale(' + mapScale + ')'}">
-          <div *ngFor="let row of grid; trackBy: trackByRowIndex" class="map-row">
-            <div *ngFor="let planet of row; trackBy: trackByPlanetId" class="map-cell">
+      <div id="spinner-container" *ngIf="fetching" class="spinner-container col-auto">
+        <div class="spinner-content">
+          <div class="spinner"></div>
+          <p>Fetching Map data...</p>
+        </div>
+      </div>
+      <div class="map-outer-container no-gutters" *ngIf="grid.length > 0" [ngStyle]="{'transform': 'scale(' + mapScale + ')'}">
+        <div class="map-container no-gutters" *ngIf="games.length > 0">
+          <div *ngFor="let row of grid; trackBy: trackByRowIndex" class="map-row no-gutters">
+            <div *ngFor="let planet of row; trackBy: trackByPlanetId" class="map-cell no-gutters ">
               <app-planet *ngIf="planet; else noPlanet" [planet]="planet" [showInfo]="showPlanetInfo"
                 [class.highlighted]="planet.highlighted"></app-planet>
               <ng-template #noPlanet>
@@ -57,8 +59,7 @@
       </div>
     </div>
   </div>
-
-  <div class="justify-content-end text-end" style="float: right" *ngIf="games.length > 0 && !fetching">
-    <app-settingsbar></app-settingsbar>
-  </div>
+</div>
+<div class="justify-content-end" style="float: right" *ngIf="games.length > 0 && !fetching">
+  <app-settingsbar></app-settingsbar>
 </div>
